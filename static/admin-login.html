@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nova SMS · Admin login</title>
+<style>
+:root{--acc:#191423;--lime:#b8f04a;--ink:#191423;--mut:#7a7387;--line:#e9e2d4;--bg:#14101f;--card:#fffdf8}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{font-family:"Avenir Next","Segoe UI",system-ui,sans-serif;background:radial-gradient(1000px 500px at 20% 0%,#4c1d95,#14101f);color:var(--ink);min-height:100dvh;display:grid;place-items:center;padding:20px}
+.wrap{width:min(960px,100%);display:grid;grid-template-columns:1fr 1fr;background:var(--card);border-radius:26px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.4)}
+.hero{background:#191423;color:#fff;padding:38px 34px;display:flex;flex-direction:column;gap:14px}
+.hero .mark{width:44px;height:44px;border-radius:14px;background:var(--lime);display:grid;place-items:center;font-weight:900;color:#1a1408;font-size:22px}
+.hero h1{margin:0;font-size:clamp(26px,3.4vw,36px)}
+.hero p{opacity:.75;margin:0}.hero ul{margin:14px 0 0;padding-left:18px;opacity:.85;font-size:14px}
+.badge{display:inline-block;background:var(--lime);color:#1a1408;font-weight:800;font-size:12px;border-radius:999px;padding:4px 12px}
+.form{padding:38px 34px}
+.form h2{margin:0 0 4px}.mut{color:var(--mut);font-size:13.5px}
+.tabs{display:flex;background:#efe9f7;border-radius:999px;padding:4px;margin:16px 0}
+.tabs a{flex:1;text-align:center;padding:10px;border-radius:999px;text-decoration:none;color:var(--mut);font-weight:700}
+.tabs a.on{background:#191423;color:#fff}
+label{display:block;margin:11px 0 0;font-weight:600;font-size:13.5px}
+input{width:100%;margin-top:6px;padding:12px 14px;border:1.5px solid var(--line);border-radius:13px;font:inherit;min-height:48px}
+input:focus{outline:none;border-color:#6d28d9;box-shadow:0 0 0 3px #a855f733}
+.btn{border:0;border-radius:999px;padding:13px;width:100%;font-weight:800;cursor:pointer;margin-top:16px;min-height:50px;font-size:15px;background:#191423;color:#fff}
+.err{background:#ffe0e6;color:#b4234a;border-radius:12px;padding:10px 14px;margin-top:12px;display:none;font-size:13.5px}
+.row{display:flex;justify-content:space-between;margin-top:14px;font-size:13.5px}
+a{color:#6d28d9;font-weight:700}
+.demo{margin-top:14px;background:#f4f2ec;border-radius:12px;padding:10px 14px;font-size:12.5px;color:var(--mut)}
+@media(max-width:760px){.wrap{grid-template-columns:1fr}.form{padding:26px 22px}.hero{padding:28px 24px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="hero"><div class="mark">◉</div><span class="badge">RESTRICTED · STAFF ONLY</span><h1>Admin console</h1>
+<p>Manage users, approve sender IDs, top up balances and watch the whole platform.</p>
+<ul><li>User directory + balances</li><li>Sender ID approvals</li><li>Tickets + reports oversight</li></ul></div>
+<div class="form"><h2>Admin sign in</h2><p class="mut">Staff accounts only.</p>
+<div class="tabs"><a href="/login">Customer</a><a class="on" href="/admin">Admin</a></div>
+<label>Work email<input id="email" placeholder="admin@nova.local" autocomplete="username"></label>
+<label>Password<input id="pass" type="password" placeholder="••••••••" autocomplete="current-password"></label>
+<div class="err" id="err"></div>
+<button class="btn" onclick="doLogin()">Unlock console →</button>
+<div class="row"><a href="/login">← Customer login</a><span class="mut">v2.1</span></div>
+<div class="demo">Demo admin — <b>admin@nova.local</b> / <b>admin123</b></div>
+</div></div>
+<script>
+async function doLogin(){
+const e=document.getElementById('err');e.style.display='none';
+try{
+const r=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},
+body:JSON.stringify({email:email.value,password:pass.value,role:'admin'})});
+const j=await r.json();if(!r.ok)throw new Error(j.detail||'Failed');
+localStorage.setItem('nova:token',j.token);localStorage.setItem('nova:user',JSON.stringify(j.user));
+location.href='/';
+}catch(ex){e.textContent=ex.message;e.style.display='block';}}
+pass.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+</script>
+</body>
+</html>

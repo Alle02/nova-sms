@@ -123,7 +123,7 @@
         <div class="card-h"><b>Bulk message</b><span class="chip" id="bCount">0 recipients</span></div>
         <label>Sender<select id="bSender" aria-label="Sender ID"></select></label>
         <label>Audience (one per line)<textarea id="bTo" rows="6" placeholder="+233…"></textarea></label>
-        <div class="frow"><button type="button" class="btn soft sm" onclick="fillFromGroup()">↳ pull audience</button><label class="file">📎 list<input id="bFile" type="file" accept=".csv,.txt"></label></div>
+        <label>Template<select id="bTpl" aria-label="SMS template" onchange="useBulkTpl()"><option value="">No template — write custom</option></select></label>
         <label>Message<textarea id="bBody" rows="4"></textarea></label>
         <div class="foot"><span>Bulk sends fan out instantly</span><button type="button" class="btn dark" id="bGoBtn" onclick="doBulk()">Launch ▸</button></div>
         <label class="check"><input type="checkbox" id="bSched" onchange="schedToggle('b')"> Schedule for later</label>

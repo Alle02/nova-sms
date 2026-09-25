@@ -130,6 +130,7 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--acc);box
 .dump{background:#0b1e3a;color:#d9cfff;border-radius:12px;padding:12px;font-size:12.3px;overflow:auto;max-height:220px;margin-top:10px;max-width:100%}
 .tips{padding-left:18px;color:var(--mut);margin:8px 0}code{background:#e3efff;padding:1px 7px;border-radius:6px;font-size:12.5px}
 .file{border:1.5px dashed var(--line);border-radius:12px;padding:9px 15px;cursor:pointer;min-height:44px;display:inline-flex;align-items:center}.file input{display:none}
+.file-btn{gap:8px;margin:0}.file-btn input{display:none}.file-btn svg{flex:none}
 .seg{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px;gap:4px;margin-bottom:14px;max-width:100%;overflow-x:auto}
 .seg button{border:0;background:none;padding:10px 24px;border-radius:999px;cursor:pointer;font-weight:700;color:var(--mut);min-height:44px;white-space:nowrap}
 .seg button.on{background:var(--dark);color:#fff}

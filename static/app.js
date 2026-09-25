@@ -146,7 +146,6 @@ vals.forEach((v,i)=>{const hh=v/M*130;x.fillStyle=["#1e6ff5","#38bdf8","#ff5b8d"
 
 sBody.oninput=()=>{const n=sBody.value.length;$("sCount").textContent=`${n} / 1600 · ${Math.max(1,Math.ceil(n/160))} seg`;};
 bTo.oninput=()=>{$("bCount").textContent=bTo.value.split("\n").map(s=>s.trim()).filter(Boolean).length+" recipients";};
-bFile.onchange=async e=>{const t=await e.target.files[0].text();bTo.value=t.split(/[\n,;]+/).map(s=>s.trim()).filter(Boolean).join("\n");bTo.oninput();};
 async function sendSingle(){const to=sTo.value,body=sBody.value;if(!to.trim()||!body.trim())return toast("Add recipient + message","err");
 // optimistic: paint instantly
 $("recent").insertAdjacentHTML("afterbegin",row({direction:"outbound",to_phone:to,body,status:"queued"}));
@@ -175,8 +174,6 @@ bWhen.value="";$("bSched").checked=false;schedToggle("b");toast(`Bulk scheduled 
 async function loadSched2(){try{const r=await api("GET","/api/scheduled");
 paint($("schedRows"),r,s=>`<tr><td>${(s.to_phones||"").slice(0,44)}</td><td>${s.send_at}</td><td><span class="st ${s.status}">${s.status}</span></td><td><button type="button" class="link" onclick="delSched2(${s.id})">cancel</button></td></tr>`);}catch(e){toast(e.message,"err");}}
 async function delSched2(id){try{await api("DELETE","/api/scheduled/"+id);loadSched2();toast("Cancelled","ok");}catch(e){toast(e.message,"err");}}
-async function fillFromGroup(){const c=await api("GET","/api/contacts");bTo.value=c.slice(0,60).map(x=>x.phone).join("\n");bTo.oninput();}
-
 const loadContacts=debounce(_loadContacts,250);
 function initials(n){return (n||"?").trim().split(/\s+/).map(s=>s[0]).join("").slice(0,2).toUpperCase();}
 function skelList(el,n=4){if(el)el.innerHTML=Array(n).fill('<div class="contact-row"><div class="sk avatar-sk"></div><div style="flex:1"><div class="sk">&nbsp;</div></div></div>').join("");}
@@ -257,7 +254,8 @@ for(const id of ["sSender","bSender"]){const el=$(id);if(!el||el.tagName!=="SELE
 const keep=el.value;
 el.innerHTML=(ok.length?ok.map(v=>`<option ${v===keep?"selected":""}>${v}</option>`).join(""):`<option value="">No approved sender — request one</option>`);
 if(el._ddSync)el._ddSync();}
-if(ok.length){if(!sSender.value)sSender.value=ok[0];if(!bSender.value)bSender.value=ok[0];}}catch{}}
+if(ok.length){if(!sSender.value)sSender.value=ok[0];if(!bSender.value)bSender.value=ok[0];}}catch{}
+try{await loadTemplates();}catch{}}
 async function loadSenders(){const r=await api("GET","/api/senders");
 const admin=ME&&(ME.role==="admin"||ME.role==="super_admin");
 paint($("sdRows"),r,s=>`<tr><td><b>${s.value}</b></td><td>${s.owner||"—"}</td><td><span class="st ${s.status==="approved"?"delivered":s.status==="rejected"?"failed":"pending"}">${s.status}</span></td><td style="white-space:nowrap">${admin?(s.status==="pending"?`<button class="link" onclick="approveSender(${s.id})">approve</button><button class="link" onclick="rejectSender(${s.id})">reject</button>`:`<button class="link" onclick="delSender(${s.id})">del</button>`):(s.status!=="approved"?`<small class="mut">awaiting admin</small>`:"")}</td></tr>`);}
@@ -267,7 +265,12 @@ if(fromDash){loadAdminDash();}loadSenders();}
 async function rejectSender(id){try{await api("POST",`/api/senders/${id}/reject`);toast("Rejected","ok");}catch(e){return toast(e.message,"err");}loadSenders();loadAdminDash();}
 async function delSender(id){try{await api("DELETE","/api/senders/"+id);loadSenders();}catch(e){toast(e.message,"err");}}
 async function loadTemplates(){const r=await api("GET","/api/templates");
-paint($("tpRows"),r,t=>`<tr><td><b>${t.name}</b></td><td>${(t.body||"").slice(0,80)}</td><td style="white-space:nowrap"><button class="link" onclick="useTemplate(${t.id})">use</button><button class="link" onclick="delTemplate(${t.id})">del</button></td></tr>`);}
+paint($("tpRows"),r,t=>`<tr><td><b>${t.name}</b></td><td>${(t.body||"").slice(0,80)}</td><td style="white-space:nowrap"><button type="button" class="link" onclick="useTemplate(${t.id})">use</button><button type="button" class="link" onclick="delTemplate(${t.id})">del</button></td></tr>`);
+const keep=$("bTpl").value;
+$("bTpl").innerHTML=`<option value="">No template — write custom</option>`+r.map(t=>`<option value="${t.id}" ${String(t.id)===keep?"selected":""}>${t.name}</option>`).join("");
+if($("bTpl")._ddSync)$("bTpl")._ddSync();}
+function useBulkTpl(){const id=$("bTpl").value;if(!id)return;
+api("GET","/api/templates").then(r=>{const t=r.find(x=>String(x.id)===String(id));if(t){bBody.value=t.body;toast("Template loaded","ok");}}).catch(e=>toast(e.message,"err"));}
 async function addTemplate(){try{await api("POST","/api/templates",{name:tpName.value,body:tpBody.value});tpName.value=tpBody.value="";loadTemplates();toast("Saved","ok");}catch(e){toast(e.message,"err");}}
 async function delTemplate(id){await api("DELETE","/api/templates/"+id);loadTemplates();}
 async function useTemplate(id){const r=await api("GET","/api/templates");const t=r.find(x=>x.id===id);if(t){sBody.value=t.body;bBody.value=t.body;go("sending","single");toast("Template loaded","ok");}}
@@ -313,6 +316,7 @@ pop.querySelectorAll(".dd-item").forEach(b=>{b.onclick=()=>{sel.selectedIndex=+b
 sel.dispatchEvent(new Event("change",{bubbles:true}));sync();close();};
 b.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();b.click();}}});}
 new MutationObserver(sync).observe(sel,{childList:true,attributes:true,subtree:true});
+sel.addEventListener("change",sync);
 sync();sel._ddSync=sync;}
 function enhanceAllDropdowns(){document.querySelectorAll("select").forEach(enhanceSelect);}
 // sidebar tooltips for collapsed mode

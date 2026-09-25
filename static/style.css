@@ -237,9 +237,10 @@ body.thread-open .threads{display:none}
 @media(max-width:560px){.aud-stats{grid-template-columns:1fr 1fr}.aud-stats>.kpi:last-child{grid-column:1/-1}}
 .pill{background:#dff1ff;color:#1d4ed8;border-radius:999px;padding:2px 10px;font-size:11px;font-weight:800;margin-left:6px}
 .grp{margin:2px 0}.grp-h{width:100%}
-.grp-h em{margin-left:auto;display:grid;place-items:center;width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.08);font-style:normal;opacity:.9;transition:transform .25s ease}
-.grp-h em svg{width:14px;height:14px;display:block}
-.grp.open .grp-h em{transform:rotate(180deg)}
+.grp-h em{margin-left:auto;display:grid;place-items:center;width:30px;height:30px;flex:none;font-style:normal;color:#8fb4ec;transition:transform .25s ease}
+.grp-h em svg{width:17px;height:17px;display:block}
+.grp-h:hover em{color:#fff}
+.grp.open .grp-h em{transform:rotate(180deg);color:#fff}
 .canvas{transition:max-width .25s ease}
 body.rail-min .canvas{max-width:1560px}
 .grp-c{display:flex;flex-direction:column;gap:3px;margin:2px 0 2px 12px;padding-left:10px;border-left:2px solid #ffffff1c}

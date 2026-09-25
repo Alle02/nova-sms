@@ -28,7 +28,6 @@ if(isAdmin)loadAdminDash();}}
 const toast=(m,ok)=>{const d=document.createElement("div");d.className="toast "+(ok||"");d.textContent=m;$("toasts").appendChild(d);setTimeout(()=>d.remove(),3200);};
 let _errN=0;window.addEventListener("error",e=>{try{if(_errN++<3)toast("Error: "+(e.message||"unknown"),"err");}catch{}});
 const debounce=(f,ms)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>f(...a),ms);};};
-let THREADS=[],THREAD="";
 // tiny SWR cache: instant paint, then revalidate
 const cache={get(k){try{const v=localStorage.getItem("nova:"+k);return v?JSON.parse(v):null;}catch{return null;}},
 set(k,v){try{localStorage.setItem("nova:"+k,JSON.stringify(v));}catch{}}};
@@ -44,18 +43,17 @@ railBtns().forEach(b=>b.onclick=()=>go(b.dataset.p,b.dataset.tab));
 tabBtns().forEach(b=>b.onclick=()=>go(b.dataset.p));
 $("moreTab").onclick=()=>document.body.classList.add("rail-open");
 document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
-const TITLES={dashboard:"Dashboard",sending:"Sending",contacts:"Contacts",sms:"History",senders:"Sender ID",templates:"SMS Template",blacklist:"Blacklist",chat:"Chat Box",reports:"Reports",developers:"Developers",support:"Support",users:"Users",profile:"Profile",billing:"Billing",pricing:"Pricing"};
+const TITLES={dashboard:"Dashboard",sending:"Sending",contacts:"Contacts",sms:"History",senders:"Sender ID",templates:"SMS Template",blacklist:"Blacklist",reports:"Reports",developers:"Developers",support:"Support",users:"Users",profile:"Profile",billing:"Billing",pricing:"Pricing"};
 function go(p,tab){railBtns().forEach(x=>x.classList.toggle("on",x.dataset.p===p&&(!x.dataset.tab||x.dataset.tab===(tab||""))));tabBtns().forEach(x=>x.classList.toggle("on",x.dataset.p===p));
 document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="p-"+p));
 document.body.classList.remove("rail-open");
 if($("meMenu"))$("meMenu").classList.add("hide");
 try{localStorage.setItem("nova:page",JSON.stringify({p,tab:tab||null}));}catch{}
-if(p!=="chat")document.body.classList.remove("thread-open");
 $("ptitle").textContent=TITLES[p]||p;
 if(tab){document.querySelectorAll(".seg button").forEach(x=>x.classList.toggle("on",x.dataset.t===tab));
 ["single","campaign","sched"].forEach(t=>{const el=$("t-"+t);if(el)el.classList.toggle("hide",tab!==t);});
 if(tab==="sched")loadSched2();}
-({dashboard:refresh,sending:loadSendersMeta,sms:loadMsgs,contacts:loadContacts,blacklist:loadBlack,chat:loadThreads,reports:loadReports,developers:loadKeys,support:loadTickets,senders:loadSenders,templates:loadTemplates,users:loadUsers,profile:loadProfile,billing:loadBilling,pricing:()=>{}}[p]||(()=>{}))();}
+({dashboard:refresh,sending:loadSendersMeta,sms:loadMsgs,contacts:loadContacts,blacklist:loadBlack,reports:loadReports,developers:loadKeys,support:loadTickets,senders:loadSenders,templates:loadTemplates,users:loadUsers,profile:loadProfile,billing:loadBilling,pricing:()=>{}}[p]||(()=>{}))();}
 function toggleMe(e){e.stopPropagation();const m=$("meMenu");m.classList.toggle("hide");
 $("meBtn").setAttribute("aria-expanded",String(!m.classList.contains("hide")));}
 document.addEventListener("click",e=>{const m=$("meMenu");if(m&&!m.classList.contains("hide")&&!e.target.closest(".me-wrap"))m.classList.add("hide");});
@@ -68,7 +66,6 @@ localStorage.setItem("nova:token",j.token);pwCur.value=pwNew.value="";toast("Pas
 async function loadBilling(){try{const b=await api("GET","/api/billing");
 $("blPlan").textContent=b.plan+" · "+b.price;$("blBal").textContent=b.balance;
 $("blSent").textContent=b.outbound;$("blDel").textContent=b.delivered;}catch(e){toast(e.message,"err");}}
-function closeThread(){THREAD="";document.body.classList.remove("thread-open");renderThreads();}
 document.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{
 document.querySelectorAll(".seg button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
 ["single","campaign","sched"].forEach(t=>{const el=$("t-"+t);if(el)el.classList.toggle("hide",b.dataset.t!==t);});
@@ -133,7 +130,7 @@ $("kContacts").textContent=s.contacts;$("kSent").textContent=s.outbound;$("kDel"
 $("kFail").textContent=s.failed;$("kPend").textContent=s.pending;$("kIn").textContent=s.inbound;
 if($("kBlk"))$("kBlk").textContent=s.blacklist;
 const rate=s.outbound?Math.round(s.delivered/s.outbound*100):0;$("heroDel").textContent=rate+"%";
-if($("meterFill"))$("meterFill").style.width=Math.min(100,s.balance/5)+"%";$("inboxN").textContent=s.inbound?("· "+s.inbound):"";
+if($("meterFill"))$("meterFill").style.width=Math.min(100,s.balance/5)+"%";if($("inboxN"))$("inboxN").textContent=s.inbound?("· "+s.inbound):"";
 donut([s.delivered,s.failed,s.pending,s.inbound]);
 $("legend").textContent=`${s.delivered} delivered · ${s.failed} failed · ${s.pending} queued`;}
 function row(m){const peer=m.direction==="outbound"?m.to_phone:m.from_phone;
@@ -221,22 +218,6 @@ paint($("mRows"),r,m=>`<tr><td>${m.id}</td><td>${m.direction}</td><td>${m.from_p
 async function loadBlack(){const r=await api("GET","/api/blacklist");paint($("blRows"),r,b=>`<tr><td>${b.phone}</td><td>${b.reason||""}</td><td><button class="link" onclick="delBlack(${b.id})">unblock</button></td></tr>`);}
 async function addBlack(){try{await api("POST","/api/blacklist",{phone:blPhone.value,reason:blWhy.value});blPhone.value=blWhy.value="";loadBlack();refresh();toast("Blocked","ok");}catch(e){toast(e.message,"err");}}
 async function delBlack(id){await api("DELETE","/api/blacklist/"+id);loadBlack();refresh();}
-
-async function loadThreads(){const c=cache.get("threads");if(c){THREADS=c;renderThreads();}
-THREADS=await api("GET","/api/conversations");cache.set("threads",THREADS);renderThreads();if(THREADS[0]&&!THREAD)openThread(THREADS[0].peer);}
-function renderThreads(){const q=(chQ.value||"").toLowerCase();
-$("threads").innerHTML=THREADS.filter(t=>!q||t.peer.includes(q)||(t.name||"").toLowerCase().includes(q))
-.map(t=>`<div class="thread ${t.peer===THREAD?"on":""}" onclick="openThread('${t.peer}')"><b>${t.name||t.peer}</b><small>${t.preview||""}</small></div>`).join("")||"<small>no threads</small>";}
-async function openThread(p){THREAD=p;renderThreads();if(window.innerWidth<=700)document.body.classList.add("thread-open");$("bubbles").innerHTML='<div class="sk">&nbsp;</div><div class="sk">&nbsp;</div>';
-const m=await api("GET","/api/conversations/"+encodeURIComponent(p));
-const c=THREADS.find(t=>t.peer===p);chPeer.textContent=p;chName.textContent=c&&c.name?" · "+c.name:"";
-bubbles.innerHTML=m.map(x=>`<div class="bub ${x.direction==="outbound"?"out":"in"}">${x.body}<small>${x.status} · ${(x.created_at||"").slice(5,16)}</small></div>`).join("");
-bubbles.scrollTop=1e6;}
-async function replyThread(){if(!THREAD)return toast("Pick a thread","err");if(!chBody.value.trim())return;
-const body=chBody.value;bubbles.insertAdjacentHTML("beforeend",`<div class="bub out">${body}<small>sending…</small></div>`);bubbles.scrollTop=1e6;chBody.value="";
-await api("POST","/api/send",{to:THREAD,body,sender:(typeof sSender!=="undefined"&&sSender.value)||"NOVA"});setTimeout(()=>openThread(THREAD),900);refresh();}
-chBody.addEventListener("keydown",e=>{if(e.key==="Enter")replyThread();},{passive:true});
-
 async function loadReports(){const s=await api("GET","/api/stats");bars("bar",[s.outbound,s.delivered,s.failed,s.inbound]);
 repTotals.innerHTML=`<div><span>Outbound</span><b>${s.outbound}</b></div><div><span>Delivered</span><b>${s.delivered}</b></div><div><span>Failed</span><b>${s.failed}</b></div><div><span>Inbox</span><b>${s.inbound}</b></div>`;
 const r=await api("GET","/api/messages?limit=15");feed.innerHTML=r.map(m=>`<div><b>${m.direction}</b> ${(m.body||"").slice(0,60)} <span class="st ${m.status}">${m.status}</span></div>`).join("");}
@@ -377,7 +358,7 @@ sync();}
 ["sWhen","bWhen"].forEach(id=>{const el=$(id);if(el)makeDT(el);});
 // idle prefetch + visibility-aware poll (cheap, smooth)
 const idle=window.requestIdleCallback||(f=>setTimeout(f,1200));
-idle(()=>{["/api/contacts?limit=20","/api/conversations","/api/blacklist"].forEach(u=>fetch(u,{headers:token()?{Authorization:"Bearer "+token()}: {}}).catch(()=>{}));});
+idle(()=>{["/api/contacts?limit=20","/api/blacklist"].forEach(u=>fetch(u,{headers:token()?{Authorization:"Bearer "+token()}: {}}).catch(()=>{}));});
 setInterval(()=>{if(!document.hidden&&$("p-dashboard").classList.contains("on"))refresh();},12000);
 (async()=>{await loadMe();
 if(!ME){localStorage.removeItem("nova:token");localStorage.removeItem("nova:user");location.href="/login";return;}

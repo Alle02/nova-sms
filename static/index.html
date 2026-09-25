@@ -29,7 +29,6 @@
       </div>
     </div>
     <button type="button" data-p="contacts"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></i><label>Contacts</label></button>
-    <button type="button" data-p="chat"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></i><label>Chat Box</label><em id="inboxN"></em></button>
     <div class="grp open" id="grpReports">
       <button type="button" class="grp-h" onclick="document.getElementById('grpReports').classList.add('open');go('reports')" aria-expanded="true"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg></i><label>Reports</label><em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></em></button>
       <div class="grp-c">
@@ -179,12 +178,6 @@
         <div class="tscroll"><table><thead><tr><th>Number</th><th>Why</th><th><span class="sr">Actions</span></th></tr></thead><tbody id="blRows"></tbody></table></div></div>
         <div class="card side"><b>Policy</b><p class="mut">Numbers here can never receive bulk messages. Unblock anytime.</p></div></div>
     </section>
-    <section class="view" id="p-chat">
-      <div class="page-head"><div><p class="eyebrow">Messaging</p><h2>Inbox</h2><p class="sub">Threads group every conversation by peer.</p></div></div>
-      <div class="inbox"><div class="threads"><input id="chQ" placeholder="Filter threads…" oninput="renderThreads()" autocomplete="off"><div id="threads" class="thread-list"></div></div>
-      <div class="thread-view"><div class="tv-h"><button type="button" class="iconbtn back" onclick="closeThread()" aria-label="Back to threads">←</button><b id="chPeer">Pick a thread</b><span id="chName"></span></div><div class="stream" id="bubbles"></div>
-      <div class="composer"><input id="chBody" placeholder="Reply… ⏎ to send" autocomplete="off"><button type="button" class="btn primary" onclick="replyThread()" aria-label="Send reply">➤</button></div></div></div>
-    </section>
     <section class="view" id="p-reports">
       <div class="page-head"><div><p class="eyebrow">Overview</p><h2>Insights</h2><p class="sub">Funnel, totals and a live stream.</p></div>
       <div><a class="btn soft" href="/api/export.csv">⬇ CSV</a></div></div>
@@ -278,7 +271,7 @@ GET /api/export.csv · docs /docs</pre></div></div>
   <nav class="tabbar" aria-label="Mobile">
     <button type="button" data-p="dashboard" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg><small>Home</small></button>
     <button type="button" data-p="sending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg><small>Send</small></button>
-    <button type="button" data-p="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><small>Inbox</small></button>
+    <button type="button" data-p="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg><small>Stats</small></button>
     <button type="button" data-p="contacts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><small>People</small></button>
     <button type="button" data-p="sms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg><small>Logs</small></button>
     <button type="button" id="moreTab" aria-label="More pages"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><small>More</small></button>

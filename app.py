@@ -709,6 +709,67 @@ def logout(authorization: str = Header(default="")):
         conn.commit(); conn.close()
     return {"ok": True}
 
+class ProfileIn(BaseModel):
+    name: str = Field(default="", max_length=100)
+    email: str = Field(default="", max_length=120)
+    phone: str = Field(default="", max_length=20)
+
+class PasswordIn(BaseModel):
+    current: str = Field(min_length=1, max_length=128)
+    new: str = Field(min_length=6, max_length=128)
+
+@app.patch("/api/auth/profile")
+def update_profile(p: ProfileIn, authorization: str = Header(default="")):
+    me = require_user(authorization)
+    conn = db.get_conn()
+    u = conn.execute("SELECT * FROM users WHERE id=?", (me["id"],)).fetchone()
+    name = p.name.strip() or u["name"]
+    email = (p.email.strip().lower() or u["email"])
+    phone = p.phone.strip() if p.phone != "" else (u["phone"] or "")
+    if "@" not in email:
+        conn.close()
+        raise HTTPException(400, "Invalid email")
+    if email != u["email"] and conn.execute("SELECT 1 FROM users WHERE email=?", (email,)).fetchone():
+        conn.close()
+        raise HTTPException(400, "Email already in use")
+    conn.execute("UPDATE users SET name=?, email=?, phone=? WHERE id=?", (name, email, phone, me["id"]))
+    conn.commit()
+    row = conn.execute("SELECT id,name,email,phone,role,balance,created_at FROM users WHERE id=?", (me["id"],)).fetchone()
+    conn.close()
+    return db.row_to_dict(row)
+
+@app.post("/api/auth/password")
+def change_password(p: PasswordIn, authorization: str = Header(default="")):
+    me = require_user(authorization)
+    conn = db.get_conn()
+    u = conn.execute("SELECT password_hash FROM users WHERE id=?", (me["id"],)).fetchone()
+    if not authlib.verify_password(p.current, u["password_hash"]):
+        conn.close()
+        raise HTTPException(401, "Current password is wrong")
+    conn.execute("UPDATE users SET password_hash=? WHERE id=?",
+                 (authlib.hash_password(p.new), me["id"]))
+    conn.execute("DELETE FROM sessions WHERE user_id=?", (me["id"],))
+    token = authlib.new_token()
+    conn.execute("INSERT INTO sessions (token,user_id,expires_at) VALUES (?,?,?)",
+                 (token, me["id"], authlib.expiry()))
+    conn.commit(); conn.close()
+    return {"ok": True, "token": token}
+
+@app.get("/api/billing")
+def billing(authorization: str = Header(default="")):
+    me = require_user(authorization)
+    conn = db.get_conn()
+    out = {
+        "plan": "Free",
+        "price": "GH₵0",
+        "balance": float(db.get_setting("balance", "150")),
+        "outbound": conn.execute("SELECT COUNT(*) FROM messages WHERE direction='outbound'").fetchone()[0],
+        "delivered": conn.execute("SELECT COUNT(*) FROM messages WHERE status='delivered'").fetchone()[0],
+        "user": me["email"],
+    }
+    conn.close()
+    return out
+
 # ---------- sender IDs (customers request, only admins approve) ----------
 @app.get("/api/senders")
 def list_senders(authorization: str = Header(default="")):

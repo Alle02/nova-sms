@@ -59,7 +59,15 @@ body.rail-min .grp-c{margin-left:0;padding-left:0;border-left:0}
 .credits{display:flex;align-items:center;gap:9px;background:var(--dark);color:#fff;border-radius:999px;padding:6px 6px 6px 15px;white-space:nowrap}
 body.dark .credits{background:#000}
 .credits small{opacity:.7}.credits b{color:var(--lime);font-size:17px}
-.me{display:flex;gap:10px;align-items:center}
+.me{display:flex;gap:10px;align-items:center;background:none;border:0;color:inherit;font:inherit;cursor:pointer;padding:6px 8px;border-radius:14px;text-align:left}
+.me:hover{background:var(--bg)}
+.me-wrap{position:relative}
+.me .chev{color:var(--mut);font-size:12px}
+.me-menu{position:absolute;right:0;top:calc(100% + 8px);z-index:60;background:var(--card);border:1px solid var(--line);border-radius:15px;box-shadow:0 18px 50px rgba(25,20,35,.22);padding:6px;min-width:200px;animation:rise .16s ease}
+.me-menu button{display:flex;gap:10px;align-items:center;width:100%;border:0;background:none;color:inherit;font:inherit;padding:11px 12px;border-radius:11px;cursor:pointer;min-height:44px;text-align:left}
+.me-menu button:hover{background:#f1e9ff}
+body.dark .me-menu button:hover{background:#2c2347}
+.me-menu hr{border:0;border-top:1px solid var(--line);margin:4px 6px}
 .face{width:40px;height:40px;flex:none;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;display:grid;place-items:center;font-weight:800}
 .me-txt b{display:block;font-size:13.5px;line-height:1.15}.me-txt small{color:var(--mut);font-size:11.5px}
 /* page heads + cards */

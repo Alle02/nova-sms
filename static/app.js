@@ -37,15 +37,28 @@ const tabBtns=()=>[...document.querySelectorAll(".tabbar button")];
 railBtns().forEach(b=>b.onclick=()=>go(b.dataset.p,b.dataset.tab));
 tabBtns().forEach(b=>b.onclick=()=>go(b.dataset.p));
 document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
-const TITLES={dashboard:"Dashboard",sending:"Sending",contacts:"Contacts",sms:"History",senders:"Sender ID",templates:"SMS Template",blacklist:"Blacklist",chat:"Chat Box",automate:"Automate SMS",reports:"Reports",developers:"Developers",support:"Support",users:"Users"};
+const TITLES={dashboard:"Dashboard",sending:"Sending",contacts:"Contacts",sms:"History",senders:"Sender ID",templates:"SMS Template",blacklist:"Blacklist",chat:"Chat Box",automate:"Automate SMS",reports:"Reports",developers:"Developers",support:"Support",users:"Users",profile:"Profile",billing:"Billing",pricing:"Pricing"};
 function go(p,tab){railBtns().forEach(x=>x.classList.toggle("on",x.dataset.p===p&&(!x.dataset.tab||x.dataset.tab===(tab||""))));tabBtns().forEach(x=>x.classList.toggle("on",x.dataset.p===p));
 document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="p-"+p));
 document.body.classList.remove("rail-open");
+if($("meMenu"))$("meMenu").classList.add("hide");
 if(p!=="chat")document.body.classList.remove("thread-open");
 $("ptitle").textContent=TITLES[p]||p;
 if(tab){document.querySelectorAll(".seg button").forEach(x=>x.classList.toggle("on",x.dataset.t===tab));
 ["single","campaign","sim"].forEach(t=>$("t-"+t).classList.toggle("hide",tab!==t));}
-({dashboard:refresh,sending:loadSendersMeta,sms:loadMsgs,contacts:loadContacts,blacklist:loadBlack,chat:loadThreads,automate:loadSched,reports:loadReports,developers:loadKeys,support:loadTickets,senders:loadSenders,templates:loadTemplates,users:loadUsers}[p]||(()=>{}))();}
+({dashboard:refresh,sending:loadSendersMeta,sms:loadMsgs,contacts:loadContacts,blacklist:loadBlack,chat:loadThreads,automate:loadSched,reports:loadReports,developers:loadKeys,support:loadTickets,senders:loadSenders,templates:loadTemplates,users:loadUsers,profile:loadProfile,billing:loadBilling,pricing:()=>{}}[p]||(()=>{}))();}
+function toggleMe(e){e.stopPropagation();const m=$("meMenu");m.classList.toggle("hide");
+$("meBtn").setAttribute("aria-expanded",String(!m.classList.contains("hide")));}
+document.addEventListener("click",e=>{const m=$("meMenu");if(m&&!m.classList.contains("hide")&&!e.target.closest(".me-wrap"))m.classList.add("hide");});
+async function loadProfile(){const u=ME||await api("GET","/api/auth/me");
+$("pfName").value=u.name||"";$("pfEmail").value=u.email||"";$("pfPhone").value=u.phone||"";}
+async function saveProfile(){try{const u=await api("PATCH","/api/auth/profile",{name:pfName.value,email:pfEmail.value,phone:pfPhone.value});
+ME=u;localStorage.setItem("nova:user",JSON.stringify(u));loadMe();toast("Profile saved","ok");}catch(e){toast(e.message,"err");}}
+async function savePassword(){try{const j=await api("POST","/api/auth/password",{current:pwCur.value,new:pwNew.value});
+localStorage.setItem("nova:token",j.token);pwCur.value=pwNew.value="";toast("Password updated","ok");}catch(e){toast(e.message,"err");}}
+async function loadBilling(){try{const b=await api("GET","/api/billing");
+$("blPlan").textContent=b.plan+" · "+b.price;$("blBal").textContent=b.balance;
+$("blSent").textContent=b.outbound;$("blDel").textContent=b.delivered;}catch(e){toast(e.message,"err");}}
 function closeThread(){THREAD="";document.body.classList.remove("thread-open");renderThreads();}
 document.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{
 document.querySelectorAll(".seg button").forEach(x=>x.classList.remove("on"));b.classList.add("on");

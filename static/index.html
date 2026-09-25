@@ -54,8 +54,16 @@
       <button class="iconbtn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◑</button>
       <button class="iconbtn" id="bellBtn" aria-label="Notifications">🔔<i></i></button>
       <div class="credits"><small>Balance</small><b id="bal">150</b><button class="btn primary sm" onclick="openTopup()">Top up</button></div>
-      <div class="me"><div class="face" id="meFace">AA</div><div class="me-txt"><b id="meName">Allen Ankrah</b><small id="meRole">owner · online</small></div>
-      <button class="iconbtn" onclick="logout()" title="Log out" aria-label="Log out">⏻</button></div>
+      <div class="me-wrap">
+      <button class="me" id="meBtn" onclick="toggleMe(event)" aria-haspopup="menu" aria-expanded="false"><div class="face" id="meFace">AA</div><div class="me-txt"><b id="meName">Allen Ankrah</b><small id="meRole">owner · online</small></div><span class="chev">▾</span></button>
+      <div class="me-menu hide" id="meMenu" role="menu">
+        <button onclick="go('profile')">👤 Profile</button>
+        <button onclick="go('billing')">💳 Billing</button>
+        <button onclick="go('pricing')">🏷 Pricing</button>
+        <hr>
+        <button onclick="logout()">⏻ Log out</button>
+      </div>
+      </div>
     </div>
   </header>
   <main class="canvas">
@@ -215,6 +223,45 @@
       <div class="page-head"><div><p class="eyebrow">Admin</p><h2>Users</h2><p class="sub">Directory, roles and balances. Admin only.</p></div></div>
       <div class="card"><div class="toolbar"><input id="uQ" class="w" placeholder="Filter users…" oninput="renderUsers()"></div>
         <div class="tscroll"><table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Balance</th><th></th></tr></thead><tbody id="uRows"></tbody></table></div></div>
+    </section>
+    <section class="view" id="p-profile">
+      <div class="page-head"><div><p class="eyebrow">Account</p><h2>Profile</h2><p class="sub">Update your details and password.</p></div></div>
+      <div class="cols"><div class="card grow"><div class="card-h"><b>Details</b></div>
+        <label>Full name<input id="pfName" autocomplete="off"></label>
+        <label>Email<input id="pfEmail" inputmode="email" autocomplete="off"></label>
+        <label>Phone<input id="pfPhone" inputmode="tel" autocomplete="off"></label>
+        <button class="btn primary wide" onclick="saveProfile()">Save changes</button></div>
+      <div class="card grow"><div class="card-h"><b>Password</b></div>
+        <label>Current password<input id="pwCur" type="password" autocomplete="current-password"></label>
+        <label>New password (6+ chars)<input id="pwNew" type="password" autocomplete="new-password"></label>
+        <button class="btn dark wide" onclick="savePassword()">Update password</button>
+        <p class="mut">Changing password signs out other sessions.</p></div></div>
+    </section>
+    <section class="view" id="p-billing">
+      <div class="page-head"><div><p class="eyebrow">Account</p><h2>Billing</h2><p class="sub">Plan, balance and usage at a glance.</p></div>
+      <div><button class="btn primary" onclick="openTopup()">Top up</button></div></div>
+      <div class="cols"><div class="card grow"><div class="card-h"><b>Current plan</b><span class="chip" id="blPlan">Free · GH₵0</span></div>
+        <div class="kv"><div><span>Balance</span><b id="blBal">–</b></div><div><span>Sent</span><b id="blSent">–</b></div><div><span>Delivered</span><b id="blDel">–</b></div></div>
+        <button class="btn soft" onclick="go('pricing')">Compare plans →</button></div>
+      <div class="card side"><b>Top up</b><p class="mut">Credits are spent per message segment. Mock billing — no real charge.</p>
+        <button class="btn primary wide" onclick="openTopup()">Add credits</button></div></div>
+    </section>
+    <section class="view" id="p-pricing">
+      <div class="page-head"><div><p class="eyebrow">Account</p><h2>Pricing</h2><p class="sub">Start free, scale when you do.</p></div></div>
+      <div class="cols">
+        <div class="card grow"><div class="card-h"><b>Free</b><span class="chip">current</span></div>
+          <h2 style="margin:0">GH₵0</h2><p class="mut">Never expires.</p>
+          <ul class="tips"><li>150 starter credits</li><li>Single + bulk sends</li><li>1 sender ID</li></ul>
+          <button class="btn soft wide" onclick="go('billing')">Stay free</button></div>
+        <div class="card grow"><div class="card-h"><b>Starter</b><span class="chip">popular</span></div>
+          <h2 style="margin:0">GH₵49<small class="mut">/mo</small></h2><p class="mut">For growing senders.</p>
+          <ul class="tips"><li>5,000 credits / month</li><li>3 sender IDs</li><li>Priority delivery</li></ul>
+          <button class="btn primary wide" onclick="toast('Starter is mock-only for now')">Choose Starter</button></div>
+        <div class="card grow"><div class="card-h"><b>Business</b></div>
+          <h2 style="margin:0">GH₵149<small class="mut">/mo</small></h2><p class="mut">For teams & resellers.</p>
+          <ul class="tips"><li>20,000 credits / month</li><li>Unlimited senders</li><li>Sub-accounts + support</li></ul>
+          <button class="btn dark wide" onclick="toast('Business is mock-only for now')">Choose Business</button></div>
+      </div>
     </section>
     <section class="view" id="p-developers">
       <div class="page-head"><div><p class="eyebrow">Manage</p><h2>API</h2><p class="sub">Tokens plus the three calls you need.</p></div></div>

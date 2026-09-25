@@ -4,7 +4,7 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="icon" href="data:,">
 <title>Nova SMS · Studio</title>
-<link rel="stylesheet" href="/static/style.css?v=blue4">
+<link rel="stylesheet" href="/static/style.css?v=blue5">
 </head>
 <body>
 <div id="pbar"></div>
@@ -45,7 +45,7 @@
     <button data-p="support"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="m5.7 5.7 3 3M18.3 5.7l-3 3M5.7 18.3l3-3M18.3 18.3l-3-3"/></svg></i><label>Support</label></button>
     <button data-p="users" id="navUsers" class="hide"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></i><label>Users</label><span class="pill">admin</span></button>
   </nav>
-  <div class="rail-foot">v2.1 · mock gateway</div>
+  <div class="rail-foot">v2.2 · <span id="buildTag">…</span></div>
 </aside>
 <div class="body">
   <header class="bar">
@@ -287,6 +287,6 @@ GET /api/export.csv · docs /docs</pre></div></div>
 <label>Name<input id="nName" autocomplete="off"></label><label>Phone<input id="nPhone" inputmode="tel"></label><label>Segment<select id="nGroup"></select></label>
 <div class="frow"><button class="btn primary" onclick="saveContact()">Save</button><button class="btn soft" onclick="closeContact()">Close</button></div></div></div>
 <div id="toasts" aria-live="polite"></div>
-<script src="/static/app.js?v=blue4"></script>
+<script src="/static/app.js?v=blue5"></script>
 </body>
 </html>

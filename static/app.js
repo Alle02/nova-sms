@@ -1,4 +1,6 @@
 const $=id=>document.getElementById(id);
+const BUILD="blue5";try{$("buildTag").textContent=BUILD;}catch{}console.log("NovaSMS",BUILD);
+let _errN=0;window.addEventListener("error",e=>{if(_errN++<3)toast("Error: "+(e.message||"unknown"),"err");});
 // progress
 let pT=null;function pStart(){$("pbar").style.opacity=1;$("pbar").style.width="35%";clearTimeout(pT);pT=setTimeout(()=>$("pbar").style.width="75%",300);}
 function pDone(){$("pbar").style.width="100%";setTimeout(()=>{$("pbar").style.opacity=0;$("pbar").style.width="0";},250);}

@@ -642,15 +642,15 @@ app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 @app.get("/login")
 def login_page():
-    return FileResponse(STATIC / "login.html")
+    return FileResponse(STATIC / "login.html", headers={"Cache-Control": "no-store"})
 
 @app.get("/admin")
 def admin_page():
-    return FileResponse(STATIC / "admin-login.html")
+    return FileResponse(STATIC / "admin-login.html", headers={"Cache-Control": "no-store"})
 
 @app.get("/")
 def index():
-    return FileResponse(STATIC / "index.html")
+    return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-store"})
 
 # ---------- auth ----------
 @app.post("/api/auth/register", status_code=201)

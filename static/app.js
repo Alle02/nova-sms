@@ -33,11 +33,12 @@ let i=0;const step=()=>{const frag=document.createElement("tbody");frag.innerHTM
 function skel(el,n=5){if(el)el.innerHTML=Array(n).fill('<tr><td colspan=7><div class="sk">&nbsp;</div></td></tr>').join("");}
 
 const railBtns=()=>[...document.querySelectorAll(".rail button[data-p]")];
-const tabBtns=()=>[...document.querySelectorAll(".tabbar button")];
+const tabBtns=()=>[...document.querySelectorAll(".tabbar button[data-p]")];
 railBtns().forEach(b=>b.onclick=()=>go(b.dataset.p,b.dataset.tab));
 tabBtns().forEach(b=>b.onclick=()=>go(b.dataset.p));
+$("moreTab").onclick=()=>document.body.classList.add("rail-open");
 document.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
-const TITLES={dashboard:"Dashboard",sending:"Sending",contacts:"Contacts",sms:"History",senders:"Sender ID",templates:"SMS Template",blacklist:"Blacklist",chat:"Chat Box",automate:"Automate SMS",reports:"Reports",developers:"Developers",support:"Support",users:"Users",profile:"Profile",billing:"Billing",pricing:"Pricing"};
+const TITLES={dashboard:"Dashboard",sending:"Sending",contacts:"Contacts",sms:"History",senders:"Sender ID",templates:"SMS Template",blacklist:"Blacklist",chat:"Chat Box",reports:"Reports",developers:"Developers",support:"Support",users:"Users",profile:"Profile",billing:"Billing",pricing:"Pricing"};
 function go(p,tab){railBtns().forEach(x=>x.classList.toggle("on",x.dataset.p===p&&(!x.dataset.tab||x.dataset.tab===(tab||""))));tabBtns().forEach(x=>x.classList.toggle("on",x.dataset.p===p));
 document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="p-"+p));
 document.body.classList.remove("rail-open");
@@ -46,7 +47,7 @@ if(p!=="chat")document.body.classList.remove("thread-open");
 $("ptitle").textContent=TITLES[p]||p;
 if(tab){document.querySelectorAll(".seg button").forEach(x=>x.classList.toggle("on",x.dataset.t===tab));
 ["single","campaign","sim"].forEach(t=>$("t-"+t).classList.toggle("hide",tab!==t));}
-({dashboard:refresh,sending:loadSendersMeta,sms:loadMsgs,contacts:loadContacts,blacklist:loadBlack,chat:loadThreads,automate:loadSched,reports:loadReports,developers:loadKeys,support:loadTickets,senders:loadSenders,templates:loadTemplates,users:loadUsers,profile:loadProfile,billing:loadBilling,pricing:()=>{}}[p]||(()=>{}))();}
+({dashboard:refresh,sending:loadSendersMeta,sms:loadMsgs,contacts:loadContacts,blacklist:loadBlack,chat:loadThreads,reports:loadReports,developers:loadKeys,support:loadTickets,senders:loadSenders,templates:loadTemplates,users:loadUsers,profile:loadProfile,billing:loadBilling,pricing:()=>{}}[p]||(()=>{}))();}
 function toggleMe(e){e.stopPropagation();const m=$("meMenu");m.classList.toggle("hide");
 $("meBtn").setAttribute("aria-expanded",String(!m.classList.contains("hide")));}
 document.addEventListener("click",e=>{const m=$("meMenu");if(m&&!m.classList.contains("hide")&&!e.target.closest(".me-wrap"))m.classList.add("hide");});
@@ -77,14 +78,12 @@ try{const s=await api("GET","/api/stats");cache.set("stats",s);applyStats(s);
 if(ME&&ME.role==="admin")loadAdminDash();else loadCustDash();
 const r=await api("GET","/api/messages?limit=14");paint($("recent"),r,row);}catch{}}
 async function loadCustDash(){try{
-const [a,sc]=await Promise.all([api("GET","/api/activity?days=7"),api("GET","/api/scheduled")]);
+const a=await api("GET","/api/activity?days=7");
 const t=k=>a.reduce((x,d)=>x+d[k],0);
 $("dSent").textContent=t("outbound")+" last 7d";$("dDel").textContent=t("delivered")+" last 7d";
 $("dFail").textContent=t("failed")+" failed 7d";$("dIn").textContent=t("inbound")+" received 7d";
 $("volLegend").textContent=t("outbound")+" sent · "+t("delivered")+" delivered";
-drawVolume("volChart",a);
-const pend=sc.filter(s=>s.status==="pending").slice(0,4);
-$("schedSnap").innerHTML=pend.length?pend.map(s=>`<div><b>${s.send_at}</b> → ${(s.to_phones||"").slice(0,42)}<br><small class="mut">${(s.body||"").slice(0,70)}</small></div>`).join(""):`<div><b>Nothing scheduled</b><br><small class="mut">Automate a flow to see it here.</small></div>`;}catch{}}
+drawVolume("volChart",a);}catch{}}
 async function loadAdminDash(){try{const o=await api("GET","/api/admin/overview");
 $("aUsers").textContent=o.users;$("aCustomers").textContent=o.customers+" customers";
 $("aMsgs").textContent=o.outbound+o.inbound;$("aDel").textContent=o.delivered;
@@ -114,12 +113,12 @@ x.fillText(v.outbound,bx+bw/2,by-5);}
 x.fillStyle="#7a7387";x.fillText(v.day,bx+bw/2,166);
 if(v.delivered){const dy=150-Math.max(2,v.delivered/M*120);x.fillStyle="#38bdf8";
 x.beginPath();x.arc(bx+bw/2,dy,3.5,0,7);x.fill();}});}
-function applyStats(s){$("bal").textContent=s.balance;if($("balSide"))$("balSide").textContent=s.balance;$("bal2").textContent=s.balance;
+function applyStats(s){$("bal").textContent=s.balance;if($("balSide"))$("balSide").textContent=s.balance;if($("bal2"))$("bal2").textContent=s.balance;
 $("kContacts").textContent=s.contacts;$("kSent").textContent=s.outbound;$("kDel").textContent=s.delivered;
 $("kFail").textContent=s.failed;$("kPend").textContent=s.pending;$("kIn").textContent=s.inbound;
 if($("kBlk"))$("kBlk").textContent=s.blacklist;
 const rate=s.outbound?Math.round(s.delivered/s.outbound*100):0;$("heroDel").textContent=rate+"%";
-$("meterFill").style.width=Math.min(100,s.balance/5)+"%";$("inboxN").textContent=s.inbound?("· "+s.inbound):"";
+if($("meterFill"))$("meterFill").style.width=Math.min(100,s.balance/5)+"%";$("inboxN").textContent=s.inbound?("· "+s.inbound):"";
 donut([s.delivered,s.failed,s.pending,s.inbound]);
 $("legend").textContent=`${s.delivered} delivered · ${s.failed} failed · ${s.pending} queued`;}
 function row(m){const peer=m.direction==="outbound"?m.to_phone:m.from_phone;
@@ -206,11 +205,6 @@ const body=chBody.value;bubbles.insertAdjacentHTML("beforeend",`<div class="bub 
 await api("POST","/api/send",{to:THREAD,body,sender:(typeof sSender!=="undefined"&&sSender.value)||"NOVA"});setTimeout(()=>openThread(THREAD),900);refresh();}
 chBody.addEventListener("keydown",e=>{if(e.key==="Enter")replyThread();},{passive:true});
 
-async function schedule(){try{const to=aTo.value.split(/[,\n]+/).map(s=>s.trim()).filter(Boolean);
-const j=await api("POST","/api/scheduled",{to,body:aBody.value,send_at:aWhen.value||"now"});toast("Flow "+j.status,"ok");loadSched();refresh();}catch(e){toast(e.message,"err");}}
-async function loadSched(){const r=await api("GET","/api/scheduled");paint($("aRows"),r,s=>`<tr><td>${s.to_phones.slice(0,40)}</td><td>${s.send_at}</td><td><span class="st ${s.status}">${s.status}</span></td><td><button class="link" onclick="delSched(${s.id})">del</button></td></tr>`);}
-async function delSched(id){await api("DELETE","/api/scheduled/"+id);loadSched();}
-
 async function loadReports(){const s=await api("GET","/api/stats");bars("bar",[s.outbound,s.delivered,s.failed,s.inbound]);
 repTotals.innerHTML=`<div><span>Outbound</span><b>${s.outbound}</b></div><div><span>Delivered</span><b>${s.delivered}</b></div><div><span>Failed</span><b>${s.failed}</b></div><div><span>Inbox</span><b>${s.inbound}</b></div>`;
 const r=await api("GET","/api/messages?limit=15");feed.innerHTML=r.map(m=>`<div><b>${m.direction}</b> ${(m.body||"").slice(0,60)} <span class="st ${m.status}">${m.status}</span></div>`).join("");}
@@ -283,6 +277,9 @@ b.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();b.click();}}
 new MutationObserver(sync).observe(sel,{childList:true,attributes:true,subtree:true});
 sync();sel._ddSync=sync;}
 function enhanceAllDropdowns(){document.querySelectorAll("select").forEach(enhanceSelect);}
+// sidebar tooltips for collapsed mode
+document.querySelectorAll(".rail nav button[data-p]").forEach(b=>{
+const l=b.querySelector("label");if(l)b.setAttribute("data-tip",l.textContent.trim());});
 enhanceAllDropdowns();
 // idle prefetch + visibility-aware poll (cheap, smooth)
 const idle=window.requestIdleCallback||(f=>setTimeout(f,1200));

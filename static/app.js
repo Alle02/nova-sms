@@ -107,12 +107,12 @@ const bw=(W-20-(n-1)*gap)/n;
 x.strokeStyle=getComputedStyle(document.body).getPropertyValue("--line")||"#e9e2d4";
 x.fillStyle="#7a7387";x.font="10px sans-serif";x.textAlign="center";
 data.forEach((v,i)=>{const bx=10+i*(bw+gap),bh=Math.max(3,v.outbound/M*120),by=150-bh;
-const g=x.createLinearGradient(0,by,0,150);g.addColorStop(0,"#7c3aed");g.addColorStop(1,"#a855f7");
+const g=x.createLinearGradient(0,by,0,150);g.addColorStop(0,"#1e6ff5");g.addColorStop(1,"#5aa5ff");
 x.fillStyle=g;x.beginPath();x.roundRect(bx,by,bw,bh,[6,6,0,0]);x.fill();
 if(v.outbound){x.fillStyle="#191423";if(document.body.classList.contains("dark"))x.fillStyle="#f2edff";
 x.fillText(v.outbound,bx+bw/2,by-5);}
 x.fillStyle="#7a7387";x.fillText(v.day,bx+bw/2,166);
-if(v.delivered){const dy=150-Math.max(2,v.delivered/M*120);x.fillStyle="#b8f04a";
+if(v.delivered){const dy=150-Math.max(2,v.delivered/M*120);x.fillStyle="#38bdf8";
 x.beginPath();x.arc(bx+bw/2,dy,3.5,0,7);x.fill();}});}
 function applyStats(s){$("bal").textContent=s.balance;if($("balSide"))$("balSide").textContent=s.balance;$("bal2").textContent=s.balance;
 $("kContacts").textContent=s.contacts;$("kSent").textContent=s.outbound;$("kDel").textContent=s.delivered;
@@ -127,11 +127,11 @@ return `<tr><td>${m.direction==="outbound"?"↗ out":"↙ in"}</td><td>${peer}${
 function fitCanvas(c,w,h){const d=Math.min(2,window.devicePixelRatio||1);c.style.width="100%";c.style.maxWidth=w+"px";
 if(c.width!==w*d){c.width=w*d;c.height=h*d;}const x=c.getContext("2d");x.setTransform(d,0,0,d,0,0);return x;}
 function donut(v){const c=$("donut");if(!c)return;const x=fitCanvas(c,150,150),T=v.reduce((a,b)=>a+b,0)||1;let a=-Math.PI/2;
-const cols=["#b8f04a","#ff5b8d","#f5c518","#a855f7"];x.clearRect(0,0,150,150);
+const cols=["#38bdf8","#ff5b8d","#f5c518","#5aa5ff"];x.clearRect(0,0,150,150);
 v.forEach((n,i)=>{const s=n/T*Math.PI*2;x.beginPath();x.moveTo(75,75);x.arc(75,75,68,a,a+s);x.fillStyle=cols[i];x.fill();a+=s;});
 x.globalCompositeOperation="destination-out";x.beginPath();x.arc(75,75,38,0,7);x.fill();x.globalCompositeOperation="source-over";}
 function bars(el,vals){const c=$(el);if(!c)return;const x=fitCanvas(c,300,170);x.clearRect(0,0,300,170);const M=Math.max(...vals,1);
-vals.forEach((v,i)=>{const hh=v/M*130;x.fillStyle=["#6d28d9","#b8f04a","#ff5b8d","#a855f7"][i%4];x.beginPath();x.roundRect(14+i*68,155-hh,44,hh,8);x.fill();});}
+vals.forEach((v,i)=>{const hh=v/M*130;x.fillStyle=["#1e6ff5","#38bdf8","#ff5b8d","#5aa5ff"][i%4];x.beginPath();x.roundRect(14+i*68,155-hh,44,hh,8);x.fill();});}
 
 sBody.oninput=()=>{const n=sBody.value.length;$("sCount").textContent=`${n} / 1600 · ${Math.max(1,Math.ceil(n/160))} seg`;};
 bTo.oninput=()=>{$("bCount").textContent=bTo.value.split("\n").map(s=>s.trim()).filter(Boolean).length+" recipients";};

@@ -326,7 +326,7 @@ enhanceAllDropdowns();
 // modern calendar picker for datetime inputs
 const MON=["January","February","March","April","May","June","July","August","September","October","November","December"];
 function makeDT(input){
-if(!input||input.dataset.dt)return;input.dataset.dt="1";input.classList.add("hide");
+if(!input||input.dataset.dt)return;input.dataset.dt="1";input.type="hidden";input.classList.add("hide");input.style.display="none";
 const wrap=document.createElement("div");wrap.className="dt-wrap";
 input.parentNode.insertBefore(wrap,input);wrap.appendChild(input);
 const btn=document.createElement("button");btn.type="button";btn.className="dt-btn";

@@ -171,6 +171,37 @@ def insert_outbound(to, body, sender="USMS-GH", bulk_id=None):
 @app.on_event("startup")
 def _startup():
     db.init_db()
+    import asyncio as _aio
+    async def _dispatcher():
+        while True:
+            try:
+                now = datetime.now().strftime("%Y-%m-%d %H:%M")
+                conn = db.get_conn()
+                rows = conn.execute(
+                    "SELECT * FROM scheduled WHERE status='pending' AND send_at<=?", (now,)).fetchall()
+                for r in rows:
+                    d = db.row_to_dict(r)
+                    try:
+                        sender = require_approved_sender(d.get("sender") or "NOVA")
+                    except Exception:
+                        conn.execute("UPDATE scheduled SET status='failed' WHERE id=?", (d["id"],))
+                        continue
+                    for p in (d.get("to_phones") or "").split(","):
+                        p = p.strip()
+                        if p:
+                            insert_outbound(p, d.get("body") or "", sender)
+                    conn.execute("UPDATE scheduled SET status='sent' WHERE id=?", (d["id"],))
+                conn.commit()
+                conn.close()
+            except Exception:
+                pass
+            await _aio.sleep(30)
+    try:
+        loop = _aio.get_event_loop()
+        if loop.is_running():
+            loop.create_task(_dispatcher())
+    except Exception:
+        pass
 
 # ---------- meta ----------
 @app.get("/api/health")

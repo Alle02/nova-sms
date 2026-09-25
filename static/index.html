@@ -109,13 +109,14 @@
     </section>
     <section class="view" id="p-sending">
       <div class="page-head"><div><p class="eyebrow">Messaging</p><h2>Compose</h2><p class="sub">Single, bulk and simulated inbound — same validation as production.</p></div></div>
-      <div class="seg" role="tablist"><button type="button" class="on" data-t="single">Single</button><button type="button" data-t="campaign">Bulk</button><button type="button" data-t="sim">Inbound sim</button></div>
+      <div class="seg" role="tablist"><button type="button" class="on" data-t="single">Single</button><button type="button" data-t="campaign">Bulk</button><button type="button" data-t="sched">Scheduled</button><button type="button" data-t="sim">Inbound sim</button></div>
       <div class="cols">
       <div class="card grow" id="t-single">
         <div class="card-h"><b>Compose single</b><span class="chip">1 credit / segment</span></div>
         <div class="f2"><label>Sender<select id="sSender" aria-label="Sender ID"></select></label><label>To<input id="sTo" placeholder="+233 24 412 3456" inputmode="tel" autocomplete="off"></label></div>
         <label>Message<textarea id="sBody" rows="5" maxlength="1600" placeholder="Write something worth reading…"></textarea></label>
         <div class="foot"><span id="sCount">0 / 1600</span><span id="sCost">≈ 1 credit</span><button type="button" class="btn primary" onclick="sendSingle()">Send ➤</button></div>
+        <div class="sched-row"><span>or</span><input id="sWhen" type="datetime-local" aria-label="Schedule time"><button type="button" class="btn soft sm" onclick="scheduleSingle()">⏱ Schedule</button></div>
         <pre id="sOut" class="dump hide"></pre></div>
       <div class="card grow hide" id="t-campaign">
         <div class="card-h"><b>Bulk message</b><span class="chip" id="bCount">0 recipients</span></div>
@@ -124,7 +125,11 @@
         <div class="frow"><button type="button" class="btn soft sm" onclick="fillFromGroup()">↳ pull audience</button><label class="file">📎 list<input id="bFile" type="file" accept=".csv,.txt"></label></div>
         <label>Message<textarea id="bBody" rows="4"></textarea></label>
         <div class="foot"><span>Bulk sends fan out instantly</span><button type="button" class="btn dark" onclick="sendBulk()">Launch ▸</button></div>
+        <div class="sched-row"><span>or</span><input id="bWhen" type="datetime-local" aria-label="Schedule time"><button type="button" class="btn soft sm" onclick="scheduleBulk()">⏱ Schedule bulk</button></div>
         <pre id="bOut" class="dump hide"></pre></div>
+      <div class="card grow hide" id="t-sched">
+        <div class="card-h"><b>Scheduled queue</b><button type="button" class="link" onclick="loadSched2()">↻ refresh</button></div>
+        <div class="tscroll"><table><thead><tr><th>Targets</th><th>When</th><th>State</th><th></th></tr></thead><tbody id="schedRows"></tbody></table></div></div>
       <div class="card grow hide" id="t-sim">
         <div class="card-h"><b>Simulate inbound</b><span class="chip">webhook</span></div>
         <label>From<input id="qFrom" placeholder="+233…" inputmode="tel"></label><label>Text<input id="qBody" placeholder="STOP"></label>

@@ -108,8 +108,8 @@
       </div>
     </section>
     <section class="view" id="p-sending">
-      <div class="page-head"><div><p class="eyebrow">Messaging</p><h2>Compose</h2><p class="sub">Single, bulk and simulated inbound — same validation as production.</p></div></div>
-      <div class="seg" role="tablist"><button type="button" class="on" data-t="single">Single</button><button type="button" data-t="campaign">Bulk</button><button type="button" data-t="sched">Scheduled</button><button type="button" data-t="sim">Inbound sim</button></div>
+      <div class="page-head"><div><p class="eyebrow">Messaging</p><h2>Compose</h2><p class="sub">Single, bulk and scheduled sends — same validation as production.</p></div></div>
+      <div class="seg" role="tablist"><button type="button" class="on" data-t="single">Single</button><button type="button" data-t="campaign">Bulk</button><button type="button" data-t="sched">Scheduled</button></div>
       <div class="cols">
       <div class="card grow" id="t-single">
         <div class="card-h"><b>Compose single</b><span class="chip">1 credit / segment</span></div>
@@ -132,11 +132,6 @@
       <div class="card grow hide" id="t-sched">
         <div class="card-h"><b>Scheduled queue</b><button type="button" class="link" onclick="loadSched2()">↻ refresh</button></div>
         <div class="tscroll"><table><thead><tr><th>Targets</th><th>When</th><th>State</th><th></th></tr></thead><tbody id="schedRows"></tbody></table></div></div>
-      <div class="card grow hide" id="t-sim">
-        <div class="card-h"><b>Simulate inbound</b><span class="chip">webhook</span></div>
-        <label>From<input id="qFrom" placeholder="+233…" inputmode="tel"></label><label>Text<input id="qBody" placeholder="STOP"></label>
-        <button type="button" class="btn soft wide" onclick="simReply()">Inject message</button>
-        <p class="mut">Pretends a handset replied so you can test inbox + flows.</p></div>
       <div class="card side"><b>Playbook</b><ul class="tips">
         <li>Ending <code>0000</code> forces a carrier fail.</li><li>Blocklisted numbers auto-reject.</li><li>Status path: <code>queued → sent → delivered</code>.</li></ul></div>
       </div>

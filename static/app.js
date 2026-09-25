@@ -53,7 +53,7 @@ try{localStorage.setItem("nova:page",JSON.stringify({p,tab:tab||null}));}catch{}
 if(p!=="chat")document.body.classList.remove("thread-open");
 $("ptitle").textContent=TITLES[p]||p;
 if(tab){document.querySelectorAll(".seg button").forEach(x=>x.classList.toggle("on",x.dataset.t===tab));
-["single","campaign","sched","sim"].forEach(t=>$("t-"+t).classList.toggle("hide",tab!==t));
+["single","campaign","sched"].forEach(t=>{const el=$("t-"+t);if(el)el.classList.toggle("hide",tab!==t);});
 if(tab==="sched")loadSched2();}
 ({dashboard:refresh,sending:loadSendersMeta,sms:loadMsgs,contacts:loadContacts,blacklist:loadBlack,chat:loadThreads,reports:loadReports,developers:loadKeys,support:loadTickets,senders:loadSenders,templates:loadTemplates,users:loadUsers,profile:loadProfile,billing:loadBilling,pricing:()=>{}}[p]||(()=>{}))();}
 function toggleMe(e){e.stopPropagation();const m=$("meMenu");m.classList.toggle("hide");
@@ -71,7 +71,7 @@ $("blSent").textContent=b.outbound;$("blDel").textContent=b.delivered;}catch(e){
 function closeThread(){THREAD="";document.body.classList.remove("thread-open");renderThreads();}
 document.querySelectorAll(".seg button").forEach(b=>b.onclick=()=>{
 document.querySelectorAll(".seg button").forEach(x=>x.classList.remove("on"));b.classList.add("on");
-["single","campaign","sched","sim"].forEach(t=>$("t-"+t).classList.toggle("hide",b.dataset.t!==t));
+["single","campaign","sched"].forEach(t=>{const el=$("t-"+t);if(el)el.classList.toggle("hide",b.dataset.t!==t);});
 if(b.dataset.t==="sched")loadSched2();});
 $("themeBtn").onclick=()=>document.body.classList.toggle("dark");
 document.addEventListener("keydown",e=>{const t=$("topSearch");if(e.key==="/"&&t&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();t.focus();}});
@@ -155,7 +155,6 @@ sOut.classList.remove("hide");sOut.textContent="→ "+j.to_phone+" · "+j.status
 async function sendBulk(){const to=bTo.value.split("\n").map(s=>s.trim()).filter(Boolean);if(!to.length)return toast("No recipients","err");
 try{const j=await api("POST","/api/bulk",{to,body:bBody.value,sender:bSender.value||"NOVA"});
 bOut.classList.remove("hide");bOut.textContent=`bulk ${j.bulk_id} · ${j.accepted}/${j.total} accepted`;toast(`Launched ${j.accepted}/${j.total}`,"ok");}catch(e){toast(e.message,"err");}refresh();}
-async function simReply(){try{await api("POST","/api/inbound",{from:qFrom.value||sTo.value||"+233244000001",body:qBody.value||"Thanks!"});toast("Inbound injected","ok");}catch(e){toast(e.message,"err");}refresh();}
 function schedToggle(w){const on=$(w==="s"?"sSched":"bSched").checked;
 $(w==="s"?"sWhen":"bWhen").classList.toggle("hide",!on);
 if(w==="s")$("sGoBtn").textContent=on?"Schedule ➤":"Send ➤";

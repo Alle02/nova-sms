@@ -115,8 +115,9 @@
         <div class="card-h"><b>Compose single</b><span class="chip">1 credit / segment</span></div>
         <div class="f2"><label>Sender<select id="sSender" aria-label="Sender ID"></select></label><label>To<input id="sTo" placeholder="+233 24 412 3456" inputmode="tel" autocomplete="off"></label></div>
         <label>Message<textarea id="sBody" rows="5" maxlength="1600" placeholder="Write something worth reading…"></textarea></label>
-        <div class="foot"><span id="sCount">0 / 1600</span><span id="sCost">≈ 1 credit</span><button type="button" class="btn primary" onclick="sendSingle()">Send ➤</button></div>
-        <div class="sched-row"><span>or</span><input id="sWhen" type="datetime-local" aria-label="Schedule time"><button type="button" class="btn soft sm" onclick="scheduleSingle()">⏱ Schedule</button></div>
+        <div class="foot"><span id="sCount">0 / 1600</span><span id="sCost">≈ 1 credit</span><button type="button" class="btn primary" id="sGoBtn" onclick="doSingle()">Send ➤</button></div>
+        <label class="check"><input type="checkbox" id="sSched" onchange="schedToggle('s')"> Schedule for later</label>
+        <input id="sWhen" type="datetime-local" class="hide" aria-label="Schedule date and time">
         <pre id="sOut" class="dump hide"></pre></div>
       <div class="card grow hide" id="t-campaign">
         <div class="card-h"><b>Bulk message</b><span class="chip" id="bCount">0 recipients</span></div>
@@ -124,8 +125,9 @@
         <label>Audience (one per line)<textarea id="bTo" rows="6" placeholder="+233…"></textarea></label>
         <div class="frow"><button type="button" class="btn soft sm" onclick="fillFromGroup()">↳ pull audience</button><label class="file">📎 list<input id="bFile" type="file" accept=".csv,.txt"></label></div>
         <label>Message<textarea id="bBody" rows="4"></textarea></label>
-        <div class="foot"><span>Bulk sends fan out instantly</span><button type="button" class="btn dark" onclick="sendBulk()">Launch ▸</button></div>
-        <div class="sched-row"><span>or</span><input id="bWhen" type="datetime-local" aria-label="Schedule time"><button type="button" class="btn soft sm" onclick="scheduleBulk()">⏱ Schedule bulk</button></div>
+        <div class="foot"><span>Bulk sends fan out instantly</span><button type="button" class="btn dark" id="bGoBtn" onclick="doBulk()">Launch ▸</button></div>
+        <label class="check"><input type="checkbox" id="bSched" onchange="schedToggle('b')"> Schedule for later</label>
+        <input id="bWhen" type="datetime-local" class="hide" aria-label="Schedule date and time">
         <pre id="bOut" class="dump hide"></pre></div>
       <div class="card grow hide" id="t-sched">
         <div class="card-h"><b>Scheduled queue</b><button type="button" class="link" onclick="loadSched2()">↻ refresh</button></div>

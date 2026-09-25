@@ -136,6 +136,8 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--acc);box
 .sched-row{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
 .sched-row>span{color:var(--mut);font-size:12.5px}
 .sched-row input{flex:1;margin-top:0;min-width:200px}
+.check{display:flex!important;flex-direction:row!important;align-items:center;gap:10px;cursor:pointer;font-weight:600}
+.check input{width:20px;height:20px;min-height:0;margin:0;accent-color:var(--acc);cursor:pointer;flex:none}
 .kv{display:flex;gap:10px;margin:12px 0}.kv>div{flex:1;background:var(--bg);border-radius:12px;padding:10px 14px}.kv b{display:block;font-size:19px}.kv.col{flex-direction:column;display:flex}
 .meterbar{height:10px;background:var(--bg);border-radius:99px;overflow:hidden;margin:10px 0}.meterbar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--lime))}
 canvas{max-width:100%;height:auto}

@@ -156,17 +156,23 @@ async function sendBulk(){const to=bTo.value.split("\n").map(s=>s.trim()).filter
 try{const j=await api("POST","/api/bulk",{to,body:bBody.value,sender:bSender.value||"NOVA"});
 bOut.classList.remove("hide");bOut.textContent=`bulk ${j.bulk_id} · ${j.accepted}/${j.total} accepted`;toast(`Launched ${j.accepted}/${j.total}`,"ok");}catch(e){toast(e.message,"err");}refresh();}
 async function simReply(){try{await api("POST","/api/inbound",{from:qFrom.value||sTo.value||"+233244000001",body:qBody.value||"Thanks!"});toast("Inbound injected","ok");}catch(e){toast(e.message,"err");}refresh();}
+function schedToggle(w){const on=$(w==="s"?"sSched":"bSched").checked;
+$(w==="s"?"sWhen":"bWhen").classList.toggle("hide",!on);
+if(w==="s")$("sGoBtn").textContent=on?"Schedule ➤":"Send ➤";
+else $("bGoBtn").textContent=on?"Schedule ▸":"Launch ▸";}
+function doSingle(){if($("sSched").checked){scheduleSingle();return;}sendSingle();}
+function doBulk(){if($("bSched").checked){scheduleBulk();return;}sendBulk();}
 function fmtWhen(v){if(!v)return "";const d=new Date(v);if(isNaN(d))return v.trim();
 return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")+" "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");}
 async function scheduleSingle(){const when=fmtWhen(sWhen.value);if(!when)return toast("Pick a date + time first","err");
 if(!sTo.value.trim()||!sBody.value.trim())return toast("Add recipient + message","err");
 try{await api("POST","/api/scheduled",{to:[sTo.value.trim()],body:sBody.value,sender:sSender.value||"NOVA",send_at:when});
-sWhen.value="";toast("Single scheduled for "+when,"ok");}catch(e){toast(e.message,"err");}}
+sWhen.value="";$("sSched").checked=false;schedToggle("s");toast("Single scheduled for "+when,"ok");}catch(e){toast(e.message,"err");}}
 async function scheduleBulk(){const when=fmtWhen(bWhen.value);if(!when)return toast("Pick a date + time first","err");
 const to=bTo.value.split("\n").map(s=>s.trim()).filter(Boolean);
 if(!to.length||!bBody.value.trim())return toast("Add recipients + message","err");
 try{await api("POST","/api/scheduled",{to,body:bBody.value,sender:bSender.value||"NOVA",send_at:when});
-bWhen.value="";toast(`Bulk scheduled for ${when} (${to.length})`,"ok");}catch(e){toast(e.message,"err");}}
+bWhen.value="";$("bSched").checked=false;schedToggle("b");toast(`Bulk scheduled for ${when} (${to.length})`,"ok");}catch(e){toast(e.message,"err");}}
 async function loadSched2(){try{const r=await api("GET","/api/scheduled");
 paint($("schedRows"),r,s=>`<tr><td>${(s.to_phones||"").slice(0,44)}</td><td>${s.send_at}</td><td><span class="st ${s.status}">${s.status}</span></td><td><button type="button" class="link" onclick="delSched2(${s.id})">cancel</button></td></tr>`);}catch(e){toast(e.message,"err");}}
 async function delSched2(id){try{await api("DELETE","/api/scheduled/"+id);loadSched2();toast("Cancelled","ok");}catch(e){toast(e.message,"err");}}

@@ -155,7 +155,8 @@ async function sendBulk(){const to=bTo.value.split("\n").map(s=>s.trim()).filter
 try{const j=await api("POST","/api/bulk",{to,body:bBody.value,sender:bSender.value||"NOVA"});
 bOut.classList.remove("hide");bOut.textContent=`bulk ${j.bulk_id} · ${j.accepted}/${j.total} accepted`;toast(`Launched ${j.accepted}/${j.total}`,"ok");}catch(e){toast(e.message,"err");}refresh();}
 function schedToggle(w){const on=$(w==="s"?"sSched":"bSched").checked;
-$(w==="s"?"sWhen":"bWhen").classList.toggle("hide",!on);
+const wrap=$(w==="s"?"sWhen":"bWhen").closest(".dt-wrap");
+if(wrap)wrap.style.display=on?"":"none";
 if(w==="s")$("sGoBtn").textContent=on?"Schedule ➤":"Send ➤";
 else $("bGoBtn").textContent=on?"Schedule ▸":"Launch ▸";}
 function doSingle(){if($("sSched").checked){scheduleSingle();return;}sendSingle();}
@@ -334,6 +335,7 @@ btn.innerHTML=`<span class="cal"><svg viewBox="0 0 24 24" fill="none" stroke="cu
 const pop=document.createElement("div");pop.className="dt-pop";
 wrap.appendChild(btn);wrap.appendChild(pop);
 pop.addEventListener("click",e=>e.stopPropagation());
+wrap.style.display="none";
 const now=new Date();let vy=now.getFullYear(),vm=now.getMonth(),hh=now.getHours(),mm=0;
 function val(){return input.value?new Date(input.value):null;}
 function paint(){

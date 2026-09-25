@@ -68,8 +68,18 @@
   </header>
   <main class="canvas">
     <section class="view on" id="p-dashboard">
-      <div class="page-head"><div><p class="eyebrow" id="dateLine">Today</p><h2 id="greetH">Design flows, hit send.</h2>
-      <p class="sub">Single sends, bulk messages, inbox and automations — with live delivery tracking.</p></div></div>
+      <div class="hero"><div class="hero-copy">
+        <p class="eyebrow light" id="dateLine">Today</p>
+        <h1 id="greetH">Design flows, hit send.</h1>
+        <p class="sub">Here's what's happening across your messaging today.</p>
+        <div class="hero-chips">
+          <span class="hchip">Balance <b id="hbBal">–</b></span>
+          <span class="hchip">Sent · 7d <b id="hbSent">–</b></span>
+          <span class="hchip">Delivered <b id="hbRate">–</b></span>
+        </div></div>
+        <div class="hero-stat"><span>Deliverability</span><b id="heroDel">–</b><div class="ring"><canvas id="donut" width="150" height="150"></canvas></div>
+        <small id="legend"></small></div>
+      </div>
       <div id="adminDash" class="hide">
         <div class="kpis">
           <div class="kpi"><span>Users</span><b id="aUsers">–</b><small id="aCustomers">– customers</small></div>
@@ -88,11 +98,6 @@
           <div class="tscroll"><table><thead><tr><th>Name</th><th>Role</th><th>Balance</th></tr></thead><tbody id="aUsersRows"></tbody></table></div></div></div>
       </div>
       <div id="custDash">
-      <div class="hero"><div><div class="cta"><button type="button" class="btn primary" data-go="sending">➤ New message</button>
-        <button type="button" class="btn soft" data-go="contacts">● Audience</button>
-        <button type="button" class="btn soft" data-go="chat">◐ Open inbox</button></div></div>
-        <div class="hero-stat"><span>Deliverability</span><b id="heroDel">–</b><div class="ring"><canvas id="donut" width="150" height="150"></canvas></div>
-        <small id="legend"></small></div></div>
       <div class="kpis">
         <div class="kpi"><span>Audience</span><b id="kContacts">–</b><small>contacts</small></div>
         <div class="kpi"><span>Dispatched</span><b id="kSent">–</b><small id="dSent">– last 7d</small></div>

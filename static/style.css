@@ -83,6 +83,13 @@ body.dark .me-menu button:hover{background:#1b2c4e}
 /* page heads + cards */
 .page-head{display:flex;justify-content:space-between;align-items:end;gap:14px;margin:4px 0 16px;flex-wrap:wrap}
 .eyebrow{letter-spacing:.15em;font-size:11px;color:var(--acc);text-transform:uppercase;margin:0;font-weight:800}
+.eyebrow.light{color:#7dd3fc}
+.hero-copy{min-width:0}
+.hero-copy h1{margin:.15em 0 .1em;font-size:clamp(26px,3.6vw,38px);letter-spacing:-.02em;color:#fff}
+.hero-copy .sub{opacity:.85;margin:0 0 16px;max-width:52ch}
+.hero-chips{display:flex;gap:10px;flex-wrap:wrap}
+.hchip{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:999px;padding:8px 16px;font-size:13px}
+.hchip b{color:#fff;font-size:16px}
 .page-head h2{margin:2px 0;font-size:clamp(22px,3vw,30px);letter-spacing:-.02em}
 .page-head .sub{margin:0;color:var(--mut)}
 .hero{background:linear-gradient(120deg,#0b2f6e,#17479e 60%,#1e6ff5);color:#fff;border-radius:24px;padding:clamp(20px,3vw,30px);display:flex;gap:24px;justify-content:space-between;align-items:center;box-shadow:var(--sh);position:relative;overflow:hidden;flex-wrap:wrap}

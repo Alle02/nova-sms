@@ -95,6 +95,8 @@ const t=k=>a.reduce((x,d)=>x+d[k],0);
 $("dSent").textContent=t("outbound")+" last 7d";$("dDel").textContent=t("delivered")+" last 7d";
 $("dFail").textContent=t("failed")+" failed 7d";$("dIn").textContent=t("inbound")+" received 7d";
 $("volLegend").textContent=t("outbound")+" sent · "+t("delivered")+" delivered";
+if($("hbSent"))$("hbSent").textContent=t("outbound");
+if($("hbRate"))$("hbRate").textContent=(t("outbound")?Math.round(t("delivered")/t("outbound")*100):0)+"%";
 drawVolume("volChart",a);}catch{}}
 async function loadAdminDash(){try{const o=await api("GET","/api/admin/overview",null,true);
 $("aUsers").textContent=o.users;$("aCustomers").textContent=o.customers+" customers";
@@ -126,6 +128,7 @@ x.fillStyle="#7a7387";x.fillText(v.day,bx+bw/2,166);
 if(v.delivered){const dy=150-Math.max(2,v.delivered/M*120);x.fillStyle="#38bdf8";
 x.beginPath();x.arc(bx+bw/2,dy,3.5,0,7);x.fill();}});}
 function applyStats(s){$("bal").textContent=s.balance;if($("balSide"))$("balSide").textContent=s.balance;if($("bal2"))$("bal2").textContent=s.balance;
+if($("hbBal"))$("hbBal").textContent=s.balance;
 $("kContacts").textContent=s.contacts;$("kSent").textContent=s.outbound;$("kDel").textContent=s.delivered;
 $("kFail").textContent=s.failed;$("kPend").textContent=s.pending;$("kIn").textContent=s.inbound;
 if($("kBlk"))$("kBlk").textContent=s.blacklist;

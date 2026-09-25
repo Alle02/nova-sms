@@ -45,6 +45,7 @@ function go(p,tab){railBtns().forEach(x=>x.classList.toggle("on",x.dataset.p===p
 document.querySelectorAll(".view").forEach(x=>x.classList.toggle("on",x.id==="p-"+p));
 document.body.classList.remove("rail-open");
 if($("meMenu"))$("meMenu").classList.add("hide");
+try{localStorage.setItem("nova:page",JSON.stringify({p,tab:tab||null}));}catch{}
 if(p!=="chat")document.body.classList.remove("thread-open");
 $("ptitle").textContent=TITLES[p]||p;
 if(tab){document.querySelectorAll(".seg button").forEach(x=>x.classList.toggle("on",x.dataset.t===tab));
@@ -165,7 +166,7 @@ const step=()=>{const frag=document.createElement("div");
 frag.innerHTML=cs.slice(i,i+40).map(c=>`<div class="contact-row"><div class="avatar">${initials(c.name)}</div>
 <div class="cmeta"><b>${c.name}</b><small>${c.phone}</small></div>
 <span class="chip">${c.group_name||"General"}</span>
-<div class="cact"><button class="iconbtn sm" title="Message" onclick="msgContact('${c.phone}')">➤</button><button class="iconbtn sm danger" title="Delete contact" aria-label="Delete ${c.name}" onclick="delContact(${c.id})">${TRASH}</button></div></div>`).join("");
+<div class="cact"><button type="button" class="iconbtn sm" title="Message" onclick="msgContact('${c.phone}')">➤</button><button type="button" class="iconbtn sm danger" title="Delete contact" aria-label="Delete ${c.name}" onclick="delContact(${c.id})">${TRASH}</button></div></div>`).join("");
 [...frag.children].forEach(n=>el.appendChild(n));i+=40;if(i<cs.length)requestAnimationFrame(step);};requestAnimationFrame(step);}
 const TRASH=`<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>`;
 function msgContact(phone){sTo.value=phone;go("sending","single");toast("Composing → "+phone,"ok");}
@@ -287,4 +288,6 @@ enhanceAllDropdowns();
 const idle=window.requestIdleCallback||(f=>setTimeout(f,1200));
 idle(()=>{["/api/contacts?limit=20","/api/conversations","/api/blacklist"].forEach(u=>fetch(u,{headers:token()?{Authorization:"Bearer "+token()}: {}}).catch(()=>{}));});
 setInterval(()=>{if(!document.hidden&&$("p-dashboard").classList.contains("on"))refresh();},12000);
-(async()=>{await loadMe();refresh();})();
+(async()=>{await loadMe();refresh();
+try{const s=JSON.parse(localStorage.getItem("nova:page")||"null");
+if(s&&s.p&&document.getElementById("p-"+s.p))go(s.p,s.tab||undefined);}catch{}})();

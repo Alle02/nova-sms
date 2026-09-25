@@ -12,38 +12,38 @@
 <div class="shell">
 <aside class="rail" aria-label="Primary">
   <div class="logo"><div class="mark">◉</div><div class="brand"><b>Nova SMS</b><span>studio console</span></div>
-  <button class="collapse" onclick="document.body.classList.toggle('rail-min')" aria-label="Collapse sidebar">⟨</button></div>
+  <button type="button" class="collapse" onclick="document.body.classList.toggle('rail-min')" aria-label="Collapse sidebar">⟨</button></div>
   <div class="sec">Overview</div>
   <nav>
-    <button data-p="dashboard" class="on" aria-current="page"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg></i><label>Dashboard</label></button>
+    <button type="button" data-p="dashboard" class="on" aria-current="page"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg></i><label>Dashboard</label></button>
   </nav>
   <div class="sec">Messaging</div>
   <nav>
     <div class="grp open" id="grpSending">
-      <button class="grp-h" onclick="document.getElementById('grpSending').classList.add('open');go('sending','single')" aria-expanded="true"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg></i><label>Sending</label><em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></em></button>
+      <button type="button" class="grp-h" onclick="document.getElementById('grpSending').classList.add('open');go('sending','single')" aria-expanded="true"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg></i><label>Sending</label><em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></em></button>
       <div class="grp-c">
-        <button data-p="sending" data-tab="single"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></i><label>Single Message</label></button>
-        <button data-p="sending" data-tab="campaign"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></i><label>Bulk Message</label></button>
-        <button data-p="senders"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="8" cy="11" r="2"/><path d="M5.5 18c.6-1.6 1.5-2.2 2.5-2.2s1.9.6 2.5 2.2"/><path d="M14 9h5M14 13h5"/></svg></i><label>Sender ID</label></button>
-        <button data-p="templates"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8"/></svg></i><label>SMS Template</label></button>
+        <button type="button" data-p="sending" data-tab="single"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></i><label>Single Message</label></button>
+        <button type="button" data-p="sending" data-tab="campaign"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></i><label>Bulk Message</label></button>
+        <button type="button" data-p="senders"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="8" cy="11" r="2"/><path d="M5.5 18c.6-1.6 1.5-2.2 2.5-2.2s1.9.6 2.5 2.2"/><path d="M14 9h5M14 13h5"/></svg></i><label>Sender ID</label></button>
+        <button type="button" data-p="templates"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8"/></svg></i><label>SMS Template</label></button>
       </div>
     </div>
-    <button data-p="contacts"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></i><label>Contacts</label></button>
-    <button data-p="chat"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></i><label>Chat Box</label><em id="inboxN"></em></button>
+    <button type="button" data-p="contacts"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></i><label>Contacts</label></button>
+    <button type="button" data-p="chat"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></i><label>Chat Box</label><em id="inboxN"></em></button>
     <div class="grp open" id="grpReports">
-      <button class="grp-h" onclick="document.getElementById('grpReports').classList.add('open');go('reports')" aria-expanded="true"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg></i><label>Reports</label><em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></em></button>
+      <button type="button" class="grp-h" onclick="document.getElementById('grpReports').classList.add('open');go('reports')" aria-expanded="true"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg></i><label>Reports</label><em><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></em></button>
       <div class="grp-c">
-        <button data-p="reports"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></i><label>Overview</label></button>
-        <button data-p="sms"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg></i><label>History</label></button>
+        <button type="button" data-p="reports"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></i><label>Overview</label></button>
+        <button type="button" data-p="sms"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg></i><label>History</label></button>
       </div>
     </div>
   </nav>
   <div class="sec">Manage</div>
   <nav>
-    <button data-p="blacklist"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 9 6 6"/></svg></i><label>Blacklist</label></button>
-    <button data-p="developers"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></i><label>Developers</label></button>
-    <button data-p="support"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="m5.7 5.7 3 3M18.3 5.7l-3 3M5.7 18.3l3-3M18.3 18.3l-3-3"/></svg></i><label>Support</label></button>
-    <button data-p="users" id="navUsers" class="hide"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></i><label>Users</label><span class="pill">admin</span></button>
+    <button type="button" data-p="blacklist"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 9 6 6"/></svg></i><label>Blacklist</label></button>
+    <button type="button" data-p="developers"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></svg></i><label>Developers</label></button>
+    <button type="button" data-p="support"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="m5.7 5.7 3 3M18.3 5.7l-3 3M5.7 18.3l3-3M18.3 18.3l-3-3"/></svg></i><label>Support</label></button>
+    <button type="button" data-p="users" id="navUsers" class="hide"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></i><label>Users</label><span class="pill">admin</span></button>
   </nav>
   <div class="rail-foot">v2.2 · <span id="buildTag">…</span></div>
 </aside>
@@ -51,17 +51,17 @@
   <header class="bar">
     <div class="title"><b id="ptitle">Overview</b><span id="greet">Welcome back</span></div>
     <div class="bar-actions">
-      <button class="iconbtn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◑</button>
-      <button class="iconbtn" id="bellBtn" aria-label="Notifications">🔔<i></i></button>
-      <div class="credits"><small>Balance</small><b id="bal">150</b><button class="btn primary sm" onclick="openTopup()">Top up</button></div>
+      <button type="button" class="iconbtn" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◑</button>
+      <button type="button" class="iconbtn" id="bellBtn" aria-label="Notifications">🔔<i></i></button>
+      <div class="credits"><small>Balance</small><b id="bal">150</b><button type="button" class="btn primary sm" onclick="openTopup()">Top up</button></div>
       <div class="me-wrap">
-      <button class="me" id="meBtn" onclick="toggleMe(event)" aria-haspopup="menu" aria-expanded="false"><div class="face" id="meFace">AA</div><div class="me-txt"><b id="meName">Allen Ankrah</b><small id="meRole">owner · online</small></div><span class="chev">▾</span></button>
+      <button type="button" class="me" id="meBtn" onclick="toggleMe(event)" aria-haspopup="menu" aria-expanded="false"><div class="face" id="meFace">AA</div><div class="me-txt"><b id="meName">Allen Ankrah</b><small id="meRole">owner · online</small></div><span class="chev">▾</span></button>
       <div class="me-menu hide" id="meMenu" role="menu">
-        <button onclick="go('profile')">👤 Profile</button>
-        <button onclick="go('billing')">💳 Billing</button>
-        <button onclick="go('pricing')">🏷 Pricing</button>
+        <button type="button" onclick="go('profile')">👤 Profile</button>
+        <button type="button" onclick="go('billing')">💳 Billing</button>
+        <button type="button" onclick="go('pricing')">🏷 Pricing</button>
         <hr>
-        <button onclick="logout()">⏻ Log out</button>
+        <button type="button" onclick="logout()">⏻ Log out</button>
       </div>
       </div>
     </div>
@@ -82,15 +82,15 @@
         <div class="cols"><div class="card grow"><div class="card-h"><b>Platform volume · 7 days</b><span class="chip" id="aVolLegend">–</span></div>
           <canvas id="aVolChart" width="520" height="180"></canvas></div>
           <div class="card side"><div class="card-h"><b>Health</b></div><div class="kv col" id="aHealth"></div></div></div>
-        <div class="cols"><div class="card grow"><div class="card-h"><b>Sender approvals queue</b><button class="link" onclick="go('senders')">Open Sender ID →</button></div>
+        <div class="cols"><div class="card grow"><div class="card-h"><b>Sender approvals queue</b><button type="button" class="link" onclick="go('senders')">Open Sender ID →</button></div>
           <div class="tscroll"><table><thead><tr><th>Sender</th><th>Owner</th><th>Status</th><th></th></tr></thead><tbody id="aPSRows"></tbody></table></div></div>
-          <div class="card grow"><div class="card-h"><b>Newest users</b><button class="link" onclick="go('users')">Open Users →</button></div>
+          <div class="card grow"><div class="card-h"><b>Newest users</b><button type="button" class="link" onclick="go('users')">Open Users →</button></div>
           <div class="tscroll"><table><thead><tr><th>Name</th><th>Role</th><th>Balance</th></tr></thead><tbody id="aUsersRows"></tbody></table></div></div></div>
       </div>
       <div id="custDash">
-      <div class="hero"><div><div class="cta"><button class="btn primary" data-go="sending">➤ New message</button>
-        <button class="btn soft" data-go="contacts">● Audience</button>
-        <button class="btn soft" data-go="chat">◐ Open inbox</button></div></div>
+      <div class="hero"><div><div class="cta"><button type="button" class="btn primary" data-go="sending">➤ New message</button>
+        <button type="button" class="btn soft" data-go="contacts">● Audience</button>
+        <button type="button" class="btn soft" data-go="chat">◐ Open inbox</button></div></div>
         <div class="hero-stat"><span>Deliverability</span><b id="heroDel">–</b><div class="ring"><canvas id="donut" width="150" height="150"></canvas></div>
         <small id="legend"></small></div></div>
       <div class="kpis">
@@ -103,32 +103,32 @@
       </div>
       <div class="cols"><div class="card grow"><div class="card-h"><b>Volume · last 7 days</b><span class="chip" id="volLegend">–</span></div>
         <canvas id="volChart" width="520" height="180"></canvas></div></div>
-      <div class="cols"><div class="card grow"><div class="card-h"><b>Latest activity</b><button class="link" data-go="sms">Open history →</button></div>
+      <div class="cols"><div class="card grow"><div class="card-h"><b>Latest activity</b><button type="button" class="link" data-go="sms">Open history →</button></div>
         <div class="tscroll"><table><thead><tr><th>Route</th><th>Peer</th><th>Copy</th><th>State</th></tr></thead><tbody id="recent"></tbody></table></div></div></div>
       </div>
     </section>
     <section class="view" id="p-sending">
       <div class="page-head"><div><p class="eyebrow">Messaging</p><h2>Compose</h2><p class="sub">Single, bulk and simulated inbound — same validation as production.</p></div></div>
-      <div class="seg" role="tablist"><button class="on" data-t="single">Single</button><button data-t="campaign">Bulk</button><button data-t="sim">Inbound sim</button></div>
+      <div class="seg" role="tablist"><button type="button" class="on" data-t="single">Single</button><button type="button" data-t="campaign">Bulk</button><button type="button" data-t="sim">Inbound sim</button></div>
       <div class="cols">
       <div class="card grow" id="t-single">
         <div class="card-h"><b>Compose single</b><span class="chip">1 credit / segment</span></div>
         <div class="f2"><label>Sender<select id="sSender" aria-label="Sender ID"></select></label><label>To<input id="sTo" placeholder="+233 24 412 3456" inputmode="tel" autocomplete="off"></label></div>
         <label>Message<textarea id="sBody" rows="5" maxlength="1600" placeholder="Write something worth reading…"></textarea></label>
-        <div class="foot"><span id="sCount">0 / 1600</span><span id="sCost">≈ 1 credit</span><button class="btn primary" onclick="sendSingle()">Send ➤</button></div>
+        <div class="foot"><span id="sCount">0 / 1600</span><span id="sCost">≈ 1 credit</span><button type="button" class="btn primary" onclick="sendSingle()">Send ➤</button></div>
         <pre id="sOut" class="dump hide"></pre></div>
       <div class="card grow hide" id="t-campaign">
         <div class="card-h"><b>Bulk message</b><span class="chip" id="bCount">0 recipients</span></div>
         <label>Sender<select id="bSender" aria-label="Sender ID"></select></label>
         <label>Audience (one per line)<textarea id="bTo" rows="6" placeholder="+233…"></textarea></label>
-        <div class="frow"><button class="btn soft sm" onclick="fillFromGroup()">↳ pull audience</button><label class="file">📎 list<input id="bFile" type="file" accept=".csv,.txt"></label></div>
+        <div class="frow"><button type="button" class="btn soft sm" onclick="fillFromGroup()">↳ pull audience</button><label class="file">📎 list<input id="bFile" type="file" accept=".csv,.txt"></label></div>
         <label>Message<textarea id="bBody" rows="4"></textarea></label>
-        <div class="foot"><span>Bulk sends fan out instantly</span><button class="btn dark" onclick="sendBulk()">Launch ▸</button></div>
+        <div class="foot"><span>Bulk sends fan out instantly</span><button type="button" class="btn dark" onclick="sendBulk()">Launch ▸</button></div>
         <pre id="bOut" class="dump hide"></pre></div>
       <div class="card grow hide" id="t-sim">
         <div class="card-h"><b>Simulate inbound</b><span class="chip">webhook</span></div>
         <label>From<input id="qFrom" placeholder="+233…" inputmode="tel"></label><label>Text<input id="qBody" placeholder="STOP"></label>
-        <button class="btn soft wide" onclick="simReply()">Inject message</button>
+        <button type="button" class="btn soft wide" onclick="simReply()">Inject message</button>
         <p class="mut">Pretends a handset replied so you can test inbox + flows.</p></div>
       <div class="card side"><b>Playbook</b><ul class="tips">
         <li>Ending <code>0000</code> forces a carrier fail.</li><li>Blocklisted numbers auto-reject.</li><li>Status path: <code>queued → sent → delivered</code>.</li></ul></div>
@@ -136,7 +136,7 @@
     </section>
     <section class="view" id="p-contacts">
       <div class="page-head"><div><p class="eyebrow">Manage</p><h2>Contacts</h2><p class="sub">Groups first, then people — import Excel anytime.</p></div>
-      <div class="frow"><button class="btn soft" onclick="document.getElementById('impFile').click()">⬆ Import</button><button class="btn primary" onclick="openContact()">+ New contact</button></div></div>
+      <div class="frow"><button type="button" class="btn soft" onclick="document.getElementById('impFile').click()">⬆ Import</button><button type="button" class="btn primary" onclick="openContact()">+ New contact</button></div></div>
       <div class="aud-stats">
         <div class="kpi"><span>Total contacts</span><b id="ctTotal">–</b><small>across groups</small></div>
         <div class="kpi"><span>Groups</span><b id="ctGroups">–</b><small>segments</small></div>
@@ -144,7 +144,7 @@
       </div>
       <div class="aud-grid">
         <aside class="card grp-panel"><div class="card-h"><b>Groups</b><span class="chip">step 1</span></div>
-          <div class="frow"><input id="gName" class="w" placeholder="New group…" maxlength="60"><button class="btn dark sm" onclick="addGroup()">Create</button></div>
+          <div class="frow"><input id="gName" class="w" placeholder="New group…" maxlength="60"><button type="button" class="btn dark sm" onclick="addGroup()">Create</button></div>
           <div id="groups" class="grp-list"></div></aside>
         <div class="card contacts-panel"><div class="card-h"><b>People</b><span class="chip">step 2</span></div>
           <div class="toolbar"><input id="cQ" class="w" placeholder="Search name or number…" oninput="loadContacts()" autocomplete="off"><select id="cG" onchange="loadContacts()" aria-label="Segment"><option value="">All groups</option></select></div>
@@ -154,7 +154,7 @@
         <p class="mut">Needs <code>name</code> + <code>phone</code> columns. Imports land in the group you pick — it must already exist.</p>
         <div class="frow"><select id="impGroup" class="w" aria-label="Import group"></select>
         <label class="file drop">📎 <span id="impLabel">choose file…</span><input id="impFile" type="file" accept=".csv,.xlsx,.xls" onchange="document.getElementById('impLabel').textContent=this.files[0]?this.files[0].name:'choose file…'"></label>
-        <button class="btn primary sm" onclick="importContacts()">Upload</button></div>
+        <button type="button" class="btn primary sm" onclick="importContacts()">Upload</button></div>
         <pre id="impOut" class="dump hide"></pre></div>
     </section>
     <section class="view" id="p-sms">
@@ -168,15 +168,15 @@
     <section class="view" id="p-blacklist">
       <div class="page-head"><div><p class="eyebrow">Manage</p><h2>Blocklist</h2><p class="sub">STOPs and complainers — sends fail closed, no credits burned.</p></div></div>
       <div class="cols"><div class="card grow"><div class="card-h"><b>Blocked numbers</b></div>
-        <div class="frow"><input id="blPhone" class="w" placeholder="+233…" inputmode="tel"><input id="blWhy" class="w" placeholder="reason"><button class="btn dark sm" onclick="addBlack()">Block</button></div>
+        <div class="frow"><input id="blPhone" class="w" placeholder="+233…" inputmode="tel"><input id="blWhy" class="w" placeholder="reason"><button type="button" class="btn dark sm" onclick="addBlack()">Block</button></div>
         <div class="tscroll"><table><thead><tr><th>Number</th><th>Why</th><th><span class="sr">Actions</span></th></tr></thead><tbody id="blRows"></tbody></table></div></div>
         <div class="card side"><b>Policy</b><p class="mut">Numbers here can never receive bulk messages. Unblock anytime.</p></div></div>
     </section>
     <section class="view" id="p-chat">
       <div class="page-head"><div><p class="eyebrow">Messaging</p><h2>Inbox</h2><p class="sub">Threads group every conversation by peer.</p></div></div>
       <div class="inbox"><div class="threads"><input id="chQ" placeholder="Filter threads…" oninput="renderThreads()" autocomplete="off"><div id="threads" class="thread-list"></div></div>
-      <div class="thread-view"><div class="tv-h"><button class="iconbtn back" onclick="closeThread()" aria-label="Back to threads">←</button><b id="chPeer">Pick a thread</b><span id="chName"></span></div><div class="stream" id="bubbles"></div>
-      <div class="composer"><input id="chBody" placeholder="Reply… ⏎ to send" autocomplete="off"><button class="btn primary" onclick="replyThread()" aria-label="Send reply">➤</button></div></div></div>
+      <div class="thread-view"><div class="tv-h"><button type="button" class="iconbtn back" onclick="closeThread()" aria-label="Back to threads">←</button><b id="chPeer">Pick a thread</b><span id="chName"></span></div><div class="stream" id="bubbles"></div>
+      <div class="composer"><input id="chBody" placeholder="Reply… ⏎ to send" autocomplete="off"><button type="button" class="btn primary" onclick="replyThread()" aria-label="Send reply">➤</button></div></div></div>
     </section>
     <section class="view" id="p-reports">
       <div class="page-head"><div><p class="eyebrow">Overview</p><h2>Insights</h2><p class="sub">Funnel, totals and a live stream.</p></div>
@@ -188,17 +188,17 @@
     <section class="view" id="p-senders">
       <div class="page-head"><div><p class="eyebrow">Sending</p><h2>Sender ID</h2><p class="sub">Request branded sender names — admin approves.</p></div></div>
       <div class="cols"><div class="card grow"><div class="card-h"><b>Request sender</b><span class="chip">approval by admin only</span></div>
-        <div class="frow"><input id="sdName" class="w" placeholder="e.g. NOVAPAY" maxlength="11"><button class="btn primary sm" onclick="addSender()">Request</button></div>
+        <div class="frow"><input id="sdName" class="w" placeholder="e.g. NOVAPAY" maxlength="11"><button type="button" class="btn primary sm" onclick="addSender()">Request</button></div>
         <div class="tscroll"><table><thead><tr><th>Sender</th><th>Owner</th><th>Status</th><th><span class="sr">Actions</span></th></tr></thead><tbody id="sdRows"></tbody></table></div></div>
         <div class="card side"><b>Rules</b><p class="mut">3–11 chars. Customers can request and use approved senders — <b>only admins approve or reject</b>. Approved senders can only be removed by an admin.</p></div></div>
     </section>
     <section class="view" id="p-templates">
       <div class="page-head"><div><p class="eyebrow">Sending</p><h2>SMS Template</h2><p class="sub">Save reusable copy, one click to load into Compose.</p></div>
-      <div><button class="btn primary" onclick="document.getElementById('tplForm').scrollIntoView({behavior:'smooth'})">+ New template</button></div></div>
+      <div><button type="button" class="btn primary" onclick="document.getElementById('tplForm').scrollIntoView({behavior:'smooth'})">+ New template</button></div></div>
       <div class="cols"><div class="card grow" id="tplForm"><div class="card-h"><b>New template</b></div>
         <label>Name<input id="tpName" placeholder="e.g. Promo"></label>
         <label>Body<textarea id="tpBody" rows="3" maxlength="1600" placeholder="Hello {{name}}…"></textarea></label>
-        <button class="btn dark wide" onclick="addTemplate()">Save template</button></div>
+        <button type="button" class="btn dark wide" onclick="addTemplate()">Save template</button></div>
       <div class="card grow"><div class="card-h"><b>Saved</b></div>
         <div class="tscroll"><table><thead><tr><th>Name</th><th>Body</th><th><span class="sr">Actions</span></th></tr></thead><tbody id="tpRows"></tbody></table></div></div></div>
     </section>
@@ -213,21 +213,21 @@
         <label>Full name<input id="pfName" autocomplete="off"></label>
         <label>Email<input id="pfEmail" inputmode="email" autocomplete="off"></label>
         <label>Phone<input id="pfPhone" inputmode="tel" autocomplete="off"></label>
-        <button class="btn primary wide" onclick="saveProfile()">Save changes</button></div>
+        <button type="button" class="btn primary wide" onclick="saveProfile()">Save changes</button></div>
       <div class="card grow"><div class="card-h"><b>Password</b></div>
         <label>Current password<input id="pwCur" type="password" autocomplete="current-password"></label>
         <label>New password (6+ chars)<input id="pwNew" type="password" autocomplete="new-password"></label>
-        <button class="btn dark wide" onclick="savePassword()">Update password</button>
+        <button type="button" class="btn dark wide" onclick="savePassword()">Update password</button>
         <p class="mut">Changing password signs out other sessions.</p></div></div>
     </section>
     <section class="view" id="p-billing">
       <div class="page-head"><div><p class="eyebrow">Account</p><h2>Billing</h2><p class="sub">Plan, balance and usage at a glance.</p></div>
-      <div><button class="btn primary" onclick="openTopup()">Top up</button></div></div>
+      <div><button type="button" class="btn primary" onclick="openTopup()">Top up</button></div></div>
       <div class="cols"><div class="card grow"><div class="card-h"><b>Current plan</b><span class="chip" id="blPlan">Free · GH₵0</span></div>
         <div class="kv"><div><span>Balance</span><b id="blBal">–</b></div><div><span>Sent</span><b id="blSent">–</b></div><div><span>Delivered</span><b id="blDel">–</b></div></div>
-        <button class="btn soft" onclick="go('pricing')">Compare plans →</button></div>
+        <button type="button" class="btn soft" onclick="go('pricing')">Compare plans →</button></div>
       <div class="card side"><b>Top up</b><p class="mut">Credits are spent per message segment. Mock billing — no real charge.</p>
-        <button class="btn primary wide" onclick="openTopup()">Add credits</button></div></div>
+        <button type="button" class="btn primary wide" onclick="openTopup()">Add credits</button></div></div>
     </section>
     <section class="view" id="p-pricing">
       <div class="page-head"><div><p class="eyebrow">Account</p><h2>Pricing</h2><p class="sub">Start free, scale when you do.</p></div></div>
@@ -235,21 +235,21 @@
         <div class="card grow"><div class="card-h"><b>Free</b><span class="chip">current</span></div>
           <h2 style="margin:0">GH₵0</h2><p class="mut">Never expires.</p>
           <ul class="tips"><li>150 starter credits</li><li>Single + bulk sends</li><li>1 sender ID</li></ul>
-          <button class="btn soft wide" onclick="go('billing')">Stay free</button></div>
+          <button type="button" class="btn soft wide" onclick="go('billing')">Stay free</button></div>
         <div class="card grow"><div class="card-h"><b>Starter</b><span class="chip">popular</span></div>
           <h2 style="margin:0">GH₵49<small class="mut">/mo</small></h2><p class="mut">For growing senders.</p>
           <ul class="tips"><li>5,000 credits / month</li><li>3 sender IDs</li><li>Priority delivery</li></ul>
-          <button class="btn primary wide" onclick="toast('Starter is mock-only for now')">Choose Starter</button></div>
+          <button type="button" class="btn primary wide" onclick="toast('Starter is mock-only for now')">Choose Starter</button></div>
         <div class="card grow"><div class="card-h"><b>Business</b></div>
           <h2 style="margin:0">GH₵149<small class="mut">/mo</small></h2><p class="mut">For teams & resellers.</p>
           <ul class="tips"><li>20,000 credits / month</li><li>Unlimited senders</li><li>Sub-accounts + support</li></ul>
-          <button class="btn dark wide" onclick="toast('Business is mock-only for now')">Choose Business</button></div>
+          <button type="button" class="btn dark wide" onclick="toast('Business is mock-only for now')">Choose Business</button></div>
       </div>
     </section>
     <section class="view" id="p-developers">
       <div class="page-head"><div><p class="eyebrow">Manage</p><h2>API</h2><p class="sub">Tokens plus the three calls you need.</p></div></div>
       <div class="cols"><div class="card grow"><div class="card-h"><b>API tokens</b></div>
-        <div class="frow"><input id="kName" class="w" placeholder="token label"><button class="btn primary sm" onclick="newKey()">Mint</button></div>
+        <div class="frow"><input id="kName" class="w" placeholder="token label"><button type="button" class="btn primary sm" onclick="newKey()">Mint</button></div>
         <div class="tscroll"><table><thead><tr><th>Label</th><th>Token</th><th><span class="sr">Actions</span></th></tr></thead><tbody id="kRows"></tbody></table></div></div>
       <div class="card side"><b>Call it</b><pre class="dump">POST /api/send
 {"to":"+233…","body":"hi"}
@@ -263,29 +263,29 @@ GET /api/export.csv · docs /docs</pre></div></div>
       <div class="page-head"><div><p class="eyebrow">Manage</p><h2>Support</h2><p class="sub">Tickets are tracked locally — we reply fast.</p></div></div>
       <div class="cols"><div class="card grow"><div class="card-h"><b>Care desk</b></div>
         <label>Subject<input id="tSub" placeholder="e.g. Delivery delays"></label><label>Details<textarea id="tMsg" rows="4"></textarea></label>
-        <button class="btn primary wide" onclick="newTicket()">Open ticket</button></div>
+        <button type="button" class="btn primary wide" onclick="newTicket()">Open ticket</button></div>
       <div class="card grow"><div class="card-h"><b>Tickets</b></div>
         <div class="tscroll"><table><thead><tr><th>#</th><th>Subject</th><th>State</th></tr></thead><tbody id="tRows"></tbody></table></div></div></div>
     </section>
   </main>
   <nav class="tabbar" aria-label="Mobile">
-    <button data-p="dashboard" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg><small>Home</small></button>
-    <button data-p="sending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg><small>Send</small></button>
-    <button data-p="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><small>Inbox</small></button>
-    <button data-p="contacts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><small>People</small></button>
-    <button data-p="sms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg><small>Logs</small></button>
-    <button id="moreTab" aria-label="More pages"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><small>More</small></button>
+    <button type="button" data-p="dashboard" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg><small>Home</small></button>
+    <button type="button" data-p="sending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg><small>Send</small></button>
+    <button type="button" data-p="chat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><small>Inbox</small></button>
+    <button type="button" data-p="contacts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><small>People</small></button>
+    <button type="button" data-p="sms"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg><small>Logs</small></button>
+    <button type="button" id="moreTab" aria-label="More pages"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg><small>More</small></button>
   </nav>
 </div>
 </div>
 <div class="scrim hide" id="topupM"><div class="sheet" role="dialog" aria-modal="true"><h3>Add credits</h3><p class="mut">Mock billing — no real charge.</p>
-<div class="frow"><button class="btn soft" onclick="topup(50)">+50</button><button class="btn soft" onclick="topup(150)">+150</button><button class="btn soft" onclick="topup(500)">+500</button></div>
+<div class="frow"><button type="button" class="btn soft" onclick="topup(50)">+50</button><button type="button" class="btn soft" onclick="topup(150)">+150</button><button type="button" class="btn soft" onclick="topup(500)">+500</button></div>
 <label>Amount<input id="topAmt" type="number" value="100" min="1"></label>
-<div class="frow"><button class="btn primary" onclick="topupCustom()">Confirm</button><button class="btn soft" onclick="closeTopup()">Close</button></div></div></div>
+<div class="frow"><button type="button" class="btn primary" onclick="topupCustom()">Confirm</button><button type="button" class="btn soft" onclick="closeTopup()">Close</button></div></div></div>
 <div class="scrim hide" id="contactM"><div class="sheet" role="dialog" aria-modal="true"><h3>New contact</h3>
 <p class="mut">Group must exist first — create it in Step 1.</p>
 <label>Name<input id="nName" autocomplete="off"></label><label>Phone<input id="nPhone" inputmode="tel"></label><label>Segment<select id="nGroup"></select></label>
-<div class="frow"><button class="btn primary" onclick="saveContact()">Save</button><button class="btn soft" onclick="closeContact()">Close</button></div></div></div>
+<div class="frow"><button type="button" class="btn primary" onclick="saveContact()">Save</button><button type="button" class="btn soft" onclick="closeContact()">Close</button></div></div></div>
 <div id="toasts" aria-live="polite"></div>
 <script src="/static/app.js?v=blue5"></script>
 </body>

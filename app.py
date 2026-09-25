@@ -113,8 +113,14 @@ def require_user(authorization: str = Header(default="")) -> dict:
 
 def require_admin(authorization: str = Header(default="")) -> dict:
     u = require_user(authorization)
-    if u["role"] != "admin":
+    if u["role"] not in ("admin", "super_admin"):
         raise HTTPException(403, "Admin only")
+    return u
+
+def require_super(authorization: str = Header(default="")) -> dict:
+    u = require_user(authorization)
+    if u["role"] != "super_admin":
+        raise HTTPException(403, "Super admin only")
     return u
 
 # ---------- helpers ----------
@@ -684,8 +690,12 @@ def login(r: LoginIn):
     if not u or not authlib.verify_password(r.password, u["password_hash"]):
         raise HTTPException(401, "Invalid email or password")
     want = (r.role or "customer").strip().lower()
-    if want in ("admin", "customer") and u["role"] != want:
+    if want == "admin" and u["role"] not in ("admin", "super_admin"):
+        raise HTTPException(403, f"This account is not an admin account. Use the {u['role']} login.")
+    elif want not in ("admin", "customer") and u["role"] != want:
         raise HTTPException(403, f"This account is not a {want} account. Use the {u['role']} login.")
+    elif want == "customer" and u["role"] != "customer":
+        raise HTTPException(403, f"This account is not a customer account. Use the {u['role']} login.")
     token = authlib.new_token()
     conn = db.get_conn()
     conn.execute("INSERT INTO sessions (token,user_id,expires_at) VALUES (?,?,?)",
@@ -890,6 +900,54 @@ def admin_topup(uid: int, t: AdminTopupIn, authorization: str = Header(default="
     conn.execute("UPDATE users SET balance=? WHERE id=?", (bal, uid))
     conn.commit(); conn.close()
     return {"id": uid, "balance": bal}
+
+class AdminUserIn(BaseModel):
+    role: str = ""
+    balance: float | None = None
+
+@app.patch("/api/admin/users/{uid}")
+def admin_update_user(uid: int, p: AdminUserIn, authorization: str = Header(default="")):
+    me = require_admin(authorization)
+    conn = db.get_conn()
+    u = conn.execute("SELECT * FROM users WHERE id=?", (uid,)).fetchone()
+    if not u:
+        conn.close()
+        raise HTTPException(404, "User not found")
+    if p.role:
+        if me["role"] != "super_admin":
+            conn.close()
+            raise HTTPException(403, "Only super admin can change roles")
+        if p.role not in ("customer", "admin", "super_admin"):
+            conn.close()
+            raise HTTPException(400, "Invalid role")
+        if uid == me["id"]:
+            conn.close()
+            raise HTTPException(400, "You cannot change your own role")
+        conn.execute("UPDATE users SET role=? WHERE id=?", (p.role, uid))
+    if p.balance is not None:
+        if p.balance < 0 or p.balance > 1000000:
+            conn.close()
+            raise HTTPException(400, "Invalid balance")
+        conn.execute("UPDATE users SET balance=? WHERE id=?", (p.balance, uid))
+    conn.commit()
+    row = conn.execute("SELECT id,name,email,phone,role,balance,created_at FROM users WHERE id=?", (uid,)).fetchone()
+    conn.close()
+    return db.row_to_dict(row)
+
+@app.delete("/api/admin/users/{uid}")
+def admin_delete_user(uid: int, authorization: str = Header(default="")):
+    me = require_super(authorization)
+    if uid == me["id"]:
+        raise HTTPException(400, "You cannot delete yourself")
+    conn = db.get_conn()
+    u = conn.execute("SELECT role FROM users WHERE id=?", (uid,)).fetchone()
+    if not u:
+        conn.close()
+        raise HTTPException(404, "User not found")
+    conn.execute("DELETE FROM sessions WHERE user_id=?", (uid,))
+    conn.execute("DELETE FROM users WHERE id=?", (uid,))
+    conn.commit(); conn.close()
+    return {"deleted": uid}
 
 @app.get("/api/activity")
 def activity(days: int = Query(7, ge=1, le=31)):

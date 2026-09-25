@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS users (
     email TEXT NOT NULL UNIQUE,
     phone TEXT DEFAULT '',
     password_hash TEXT NOT NULL,
-    role TEXT NOT NULL DEFAULT 'customer' CHECK(role IN ('customer','admin')),
+    role TEXT NOT NULL DEFAULT 'customer' CHECK(role IN ('customer','admin','super_admin')),
     balance REAL DEFAULT 150,
     created_at TEXT DEFAULT (datetime('now'))
 );
@@ -132,6 +132,22 @@ def init_db():
                 conn.execute("ALTER TABLE sender_ids ADD COLUMN user_id INTEGER REFERENCES users(id)")
         except Exception:
             pass
+        # migrate users.role to include super_admin on older DBs
+        try:
+            sql = (conn.execute("SELECT sql FROM sqlite_master WHERE name='users'").fetchone() or [""])[0]
+            if "super_admin" not in sql:
+                conn.execute("""CREATE TABLE users_new (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL,
+                    email TEXT NOT NULL UNIQUE, phone TEXT DEFAULT '',
+                    password_hash TEXT NOT NULL,
+                    role TEXT NOT NULL DEFAULT 'customer' CHECK(role IN ('customer','admin','super_admin')),
+                    balance REAL DEFAULT 150, created_at TEXT DEFAULT (datetime('now')))""")
+                conn.execute("""INSERT INTO users_new (id,name,email,phone,password_hash,role,balance,created_at)
+                                SELECT id,name,email,phone,password_hash,role,balance,created_at FROM users""")
+                conn.execute("DROP TABLE users")
+                conn.execute("ALTER TABLE users_new RENAME TO users")
+        except Exception:
+            pass
         if not conn.execute("SELECT 1 FROM groups WHERE name='General'").fetchone():
             conn.execute("INSERT INTO groups (name) VALUES ('General')")
         try:
@@ -153,6 +169,9 @@ def init_db():
             if not conn.execute("SELECT 1 FROM users WHERE email='admin@nova.local'").fetchone():
                 conn.execute("INSERT INTO users (name,email,password_hash,role,balance) VALUES (?,?,?,?,?)",
                              ("Admin", "admin@nova.local", _auth.hash_password("admin123"), "admin", 1000))
+            if not conn.execute("SELECT 1 FROM users WHERE email='super@nova.local'").fetchone():
+                conn.execute("INSERT INTO users (name,email,password_hash,role,balance) VALUES (?,?,?,?,?)",
+                             ("Super Admin", "super@nova.local", _auth.hash_password("super123"), "super_admin", 5000))
             if not conn.execute("SELECT 1 FROM users WHERE email='customer@nova.local'").fetchone():
                 conn.execute("INSERT INTO users (name,email,password_hash,role,balance) VALUES (?,?,?,?,?)",
                              ("Allen Ankrah", "customer@nova.local", _auth.hash_password("customer123"), "customer", 150))

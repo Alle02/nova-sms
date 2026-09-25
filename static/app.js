@@ -18,11 +18,12 @@ let ME=null;
 async function loadMe(){try{ME=await api("GET","/api/auth/me");localStorage.setItem("nova:user",JSON.stringify(ME));}catch{ME=JSON.parse(localStorage.getItem("nova:user")||"null");}
 if(ME){$("meName").textContent=ME.name||"User";$("meRole").textContent=(ME.role||"customer")+" · online";
 $("meFace").textContent=(ME.name||"U").split(" ").map(s=>s[0]).join("").slice(0,2).toUpperCase();
-const isAdmin=ME.role==="admin";
+const isAdmin=ME.role==="admin"||ME.role==="super_admin";
+const isSuper=ME.role==="super_admin";
 if(isAdmin)$("navUsers").classList.remove("hide");
 $("adminDash").classList.toggle("hide",!isAdmin);
 $("custDash").classList.toggle("hide",isAdmin);
-$("greetH").textContent=isAdmin?"Admin control room.":"Morning flow, let's hit send.";
+$("greetH").textContent=isSuper?"Super control room.":isAdmin?"Admin control room.":"Morning flow, let's hit send.";
 if(isAdmin)loadAdminDash();}}
 const toast=(m,ok)=>{const d=document.createElement("div");d.className="toast "+(ok||"");d.textContent=m;$("toasts").appendChild(d);setTimeout(()=>d.remove(),3200);};
 let _errN=0;window.addEventListener("error",e=>{try{if(_errN++<3)toast("Error: "+(e.message||"unknown"),"err");}catch{}});
@@ -82,7 +83,7 @@ $("dateLine").textContent=new Date().toDateString();
 let _sig="";
 async function refresh(quiet){const c=cache.get("stats");if(c&&!_sig)applyStats(c);
 try{const s=await api("GET","/api/stats",null,true);cache.set("stats",s);applyStats(s);
-if(ME&&ME.role==="admin")loadAdminDash();else loadCustDash();
+if(ME&&(ME.role==="admin"||ME.role==="super_admin"))loadAdminDash();else loadCustDash();
 const r=await api("GET","/api/messages?limit=14",null,true);
 const sig=JSON.stringify(r.map(m=>[m.id,m.status,m.body]));
 if(sig!==_sig){_sig=sig;paint($("recent"),r,row);}}catch{}}
@@ -237,7 +238,7 @@ el.innerHTML=(ok.length?ok.map(v=>`<option ${v===keep?"selected":""}>${v}</optio
 if(el._ddSync)el._ddSync();}
 if(ok.length){if(!sSender.value)sSender.value=ok[0];if(!bSender.value)bSender.value=ok[0];}}catch{}}
 async function loadSenders(){const r=await api("GET","/api/senders");
-const admin=ME&&ME.role==="admin";
+const admin=ME&&(ME.role==="admin"||ME.role==="super_admin");
 paint($("sdRows"),r,s=>`<tr><td><b>${s.value}</b></td><td>${s.owner||"—"}</td><td><span class="st ${s.status==="approved"?"delivered":s.status==="rejected"?"failed":"pending"}">${s.status}</span></td><td style="white-space:nowrap">${admin?(s.status==="pending"?`<button class="link" onclick="approveSender(${s.id})">approve</button><button class="link" onclick="rejectSender(${s.id})">reject</button>`:`<button class="link" onclick="delSender(${s.id})">del</button>`):(s.status!=="approved"?`<small class="mut">awaiting admin</small>`:"")}</td></tr>`);}
 async function addSender(){try{await api("POST","/api/senders",{value:sdName.value});sdName.value="";loadSenders();toast("Requested — an admin must approve","ok");}catch(e){toast(e.message,"err");}}
 async function approveSender(id,fromDash){try{await api("POST",`/api/senders/${id}/approve`);toast("Approved","ok");}catch(e){return toast(e.message,"err");}
@@ -250,12 +251,19 @@ async function addTemplate(){try{await api("POST","/api/templates",{name:tpName.
 async function delTemplate(id){await api("DELETE","/api/templates/"+id);loadTemplates();}
 async function useTemplate(id){const r=await api("GET","/api/templates");const t=r.find(x=>x.id===id);if(t){sBody.value=t.body;bBody.value=t.body;go("sending","single");toast("Template loaded","ok");}}
 let USERS=[];
-async function loadUsers(){if(!ME||ME.role!=="admin"){toast("Admin only","err");return go("dashboard");}
+async function loadUsers(){if(!ME||(ME.role!=="admin"&&ME.role!=="super_admin")){toast("Admin only","err");return go("dashboard");}
 USERS=await api("GET","/api/admin/users");renderUsers();}
 function renderUsers(){const q=(uQ.value||"").toLowerCase();
+const admin=ME&&ME.role==="admin", super_=ME&&ME.role==="super_admin";
 paint($("uRows"),USERS.filter(u=>!q||u.name.toLowerCase().includes(q)||u.email.includes(q)),
-u=>`<tr><td>${u.name}</td><td>${u.email}</td><td><span class="chip">${u.role}</span></td><td>${u.balance}</td><td><button class="link" onclick="adminTopup(${u.id})">+100</button></td></tr>`);}
+u=>`<tr><td>${u.name}<br><small class="mut">${u.email}</small></td>
+<td>${super_?`<select onchange="setRole(${u.id},this.value)" aria-label="role">${["customer","admin","super_admin"].map(r=>`<option ${u.role===r?"selected":""}>${r}</option>`).join("")}</select>`:`<span class="chip">${u.role}</span>`}</td>
+<td>${u.balance}</td>
+<td style="white-space:nowrap"><button class="link" onclick="adminTopup(${u.id})">+100</button>${super_?`<button class="link" onclick="delUser(${u.id})">del</button>`:""}</td></tr>`);}
 async function adminTopup(id){const j=await api("POST",`/api/admin/users/${id}/topup`,{amount:100});USERS=USERS.map(u=>u.id===id?Object.assign(u,{balance:j.balance}):u);renderUsers();toast("Topped up → "+j.balance,"ok");}
+async function setRole(id,role){try{const u=await api("PATCH",`/api/admin/users/${id}`,{role});USERS=USERS.map(x=>x.id===id?u:x);renderUsers();toast(u.name+" → "+u.role,"ok");}catch(e){toast(e.message,"err");loadUsers();}}
+async function delUser(id){const u=USERS.find(x=>x.id===id);if(!confirm(`Delete ${u?u.name:"user"} permanently?`))return;
+try{await api("DELETE","/api/admin/users/"+id);USERS=USERS.filter(x=>x.id!==id);renderUsers();toast("Deleted","ok");}catch(e){toast(e.message,"err");}}
 // modern dropdowns: custom popover synced to native select (source of truth)
 function enhanceSelect(sel){
 if(!sel||sel.dataset.dd)return;sel.dataset.dd="1";

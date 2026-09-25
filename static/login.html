@@ -71,7 +71,9 @@ localStorage.setItem('nova:token',j.token);localStorage.setItem('nova:user',JSON
 location.href='/';
 }catch(ex){e.textContent=ex.message;e.style.display='block';}}
 pass.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
-if(localStorage.getItem('nova:token'))location.href='/';
+(async()=>{const t=localStorage.getItem('nova:token');if(!t)return;
+try{const r=await fetch('/api/auth/me',{headers:{Authorization:'Bearer '+t}});
+if(r.ok)location.href='/';else localStorage.removeItem('nova:token');}catch{}})();
 </script>
 </body>
 </html>

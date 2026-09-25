@@ -1,15 +1,17 @@
 const $=id=>document.getElementById(id);
 const BUILD="blue5";try{$("buildTag").textContent=BUILD;}catch{}console.log("NovaSMS",BUILD);
-let _errN=0;window.addEventListener("error",e=>{if(_errN++<3)toast("Error: "+(e.message||"unknown"),"err");});
 // progress
 let pT=null;function pStart(){$("pbar").style.opacity=1;$("pbar").style.width="35%";clearTimeout(pT);pT=setTimeout(()=>$("pbar").style.width="75%",300);}
 function pDone(){$("pbar").style.width="100%";setTimeout(()=>{$("pbar").style.opacity=0;$("pbar").style.width="0";},250);}
 const token=()=>localStorage.getItem("nova:token")||"";
 if(!token())location.href="/login";
-const api=async(m,u,b)=>{pStart();const c=new AbortController();const t=setTimeout(()=>c.abort(),15000);
+let _gone=false;
+const api=async(m,u,b,quiet)=>{if(!quiet)pStart();const c=new AbortController();const t=setTimeout(()=>c.abort(),15000);
 try{const r=await fetch(u,{method:m,headers:Object.assign({"Content-Type":"application/json"},token()?{Authorization:"Bearer "+token()}:{}),body:b?JSON.stringify(b):undefined,signal:c.signal});
-if(r.status===401&&!u.includes("/api/auth")){location.href="/login";throw new Error("Session expired — login again");}
-const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.detail||"Request failed");return j;}finally{clearTimeout(t);pDone();}};
+if(r.status===401&&!u.includes("/api/auth")){
+if(!_gone){_gone=true;localStorage.removeItem("nova:token");localStorage.removeItem("nova:user");location.href="/login";}
+throw new Error("Session expired — login again");}
+const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.detail||"Request failed");return j;}finally{clearTimeout(t);if(!quiet)pDone();}};
 function logout(){localStorage.removeItem("nova:token");localStorage.removeItem("nova:user");location.href="/login";}
 function toggleGrp(id){document.getElementById(id).classList.toggle("open");}
 let ME=null;
@@ -23,6 +25,7 @@ $("custDash").classList.toggle("hide",isAdmin);
 $("greetH").textContent=isAdmin?"Admin control room.":"Morning flow, let's hit send.";
 if(isAdmin)loadAdminDash();}}
 const toast=(m,ok)=>{const d=document.createElement("div");d.className="toast "+(ok||"");d.textContent=m;$("toasts").appendChild(d);setTimeout(()=>d.remove(),3200);};
+let _errN=0;window.addEventListener("error",e=>{try{if(_errN++<3)toast("Error: "+(e.message||"unknown"),"err");}catch{}});
 const debounce=(f,ms)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>f(...a),ms);};};
 let THREADS=[],THREAD="";
 // tiny SWR cache: instant paint, then revalidate
@@ -76,24 +79,27 @@ $("greet").textContent=(h<12?"Good morning":h<17?"Good afternoon":"Good evening"
 $("greetH").textContent=(h<12?"Morning flow":h<17?"Afternoon flow":"Evening flow")+", let's hit send.";
 $("dateLine").textContent=new Date().toDateString();
 
-async function refresh(){const c=cache.get("stats");if(c)applyStats(c);
-try{const s=await api("GET","/api/stats");cache.set("stats",s);applyStats(s);
+let _sig="";
+async function refresh(quiet){const c=cache.get("stats");if(c&&!_sig)applyStats(c);
+try{const s=await api("GET","/api/stats",null,true);cache.set("stats",s);applyStats(s);
 if(ME&&ME.role==="admin")loadAdminDash();else loadCustDash();
-const r=await api("GET","/api/messages?limit=14");paint($("recent"),r,row);}catch{}}
+const r=await api("GET","/api/messages?limit=14",null,true);
+const sig=JSON.stringify(r.map(m=>[m.id,m.status,m.body]));
+if(sig!==_sig){_sig=sig;paint($("recent"),r,row);}}catch{}}
 async function loadCustDash(){try{
-const a=await api("GET","/api/activity?days=7");
+const a=await api("GET","/api/activity?days=7",null,true);
 const t=k=>a.reduce((x,d)=>x+d[k],0);
 $("dSent").textContent=t("outbound")+" last 7d";$("dDel").textContent=t("delivered")+" last 7d";
 $("dFail").textContent=t("failed")+" failed 7d";$("dIn").textContent=t("inbound")+" received 7d";
 $("volLegend").textContent=t("outbound")+" sent · "+t("delivered")+" delivered";
 drawVolume("volChart",a);}catch{}}
-async function loadAdminDash(){try{const o=await api("GET","/api/admin/overview");
+async function loadAdminDash(){try{const o=await api("GET","/api/admin/overview",null,true);
 $("aUsers").textContent=o.users;$("aCustomers").textContent=o.customers+" customers";
 $("aMsgs").textContent=o.outbound+o.inbound;$("aDel").textContent=o.delivered;
 $("aPS").textContent=o.pending_senders;$("aTix").textContent=o.open_tickets;$("aBlk").textContent=o.blocked;
 paint($("aPSRows"),o.pending_sender_list,s=>`<tr><td><b>${s.value}</b></td><td>${s.owner||"—"}</td><td><span class="st pending">${s.status}</span></td><td style="white-space:nowrap"><button class="link" onclick="approveSender(${s.id},true)">approve</button><button class="link" onclick="rejectSender(${s.id})">reject</button></td></tr>`);
 paint($("aUsersRows"),o.recent_users,u=>`<tr><td>${u.name}</td><td><span class="chip">${u.role}</span></td><td>${u.balance}</td></tr>`);
-try{const a=await api("GET","/api/activity?days=7");
+try{const a=await api("GET","/api/activity?days=7",null,true);
 const t=k=>a.reduce((x,d)=>x+d[k],0);
 $("aVolLegend").textContent=t("outbound")+" sent · "+t("delivered")+" delivered";
 drawVolume("aVolChart",a);
@@ -288,6 +294,8 @@ enhanceAllDropdowns();
 const idle=window.requestIdleCallback||(f=>setTimeout(f,1200));
 idle(()=>{["/api/contacts?limit=20","/api/conversations","/api/blacklist"].forEach(u=>fetch(u,{headers:token()?{Authorization:"Bearer "+token()}: {}}).catch(()=>{}));});
 setInterval(()=>{if(!document.hidden&&$("p-dashboard").classList.contains("on"))refresh();},12000);
-(async()=>{await loadMe();refresh();
+(async()=>{await loadMe();
+if(!ME){localStorage.removeItem("nova:token");localStorage.removeItem("nova:user");location.href="/login";return;}
+refresh();
 try{const s=JSON.parse(localStorage.getItem("nova:page")||"null");
 if(s&&s.p&&document.getElementById("p-"+s.p))go(s.p,s.tab||undefined);}catch{}})();

@@ -323,6 +323,53 @@ function enhanceAllDropdowns(){document.querySelectorAll("select").forEach(enhan
 document.querySelectorAll(".rail nav button[data-p]").forEach(b=>{
 const l=b.querySelector("label");if(l)b.setAttribute("data-tip",l.textContent.trim());});
 enhanceAllDropdowns();
+// modern calendar picker for datetime inputs
+const MON=["January","February","March","April","May","June","July","August","September","October","November","December"];
+function makeDT(input){
+if(!input||input.dataset.dt)return;input.dataset.dt="1";input.classList.add("hide");
+const wrap=document.createElement("div");wrap.className="dt-wrap";
+input.parentNode.insertBefore(wrap,input);wrap.appendChild(input);
+const btn=document.createElement("button");btn.type="button";btn.className="dt-btn";
+btn.innerHTML=`<span class="cal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span><span class="lbl dim">Pick date & time…</span>`;
+const pop=document.createElement("div");pop.className="dt-pop";
+wrap.appendChild(btn);wrap.appendChild(pop);
+pop.addEventListener("click",e=>e.stopPropagation());
+const now=new Date();let vy=now.getFullYear(),vm=now.getMonth(),hh=now.getHours(),mm=0;
+function val(){return input.value?new Date(input.value):null;}
+function paint(){
+const first=new Date(vy,vm,1),start=(first.getDay()+6)%7,dim=new Date(vy,vm,0).getDate(),days=new Date(vy,vm+1,0).getDate();
+const sel=val(),today=new Date();today.setHours(0,0,0,0);
+let cells=["M","T","W","T","F","S","S"].map(d=>`<div class="dt-dow">${d}</div>`).join("");
+for(let i=0;i<42;i++){
+const dn=i-start+1;let d,other=false;
+if(dn<1){d=new Date(vy,vm-1,dim+dn);other=true;}else if(dn>days){d=new Date(vy,vm+1,dn-days);other=true;}else d=new Date(vy,vm,dn);
+const past=d<today, isSel=sel&&d.toDateString()===(val()&&val().toDateString());
+cells+=`<button type="button" class="dt-day${other?" dim":""}${d.toDateString()===today.toDateString()?" today":""}${isSel?" sel":""}" data-d="${d.getFullYear()}-${d.getMonth()}-${d.getDate()}" ${past?"disabled":""}>${d.getDate()}</button>`;}
+const pad=n=>String(n).padStart(2,"0");
+pop.innerHTML=`<div class="dt-head"><button type="button" class="dt-nav" data-n="-1">‹</button><b>${MON[vm]} ${vy}</b><button type="button" class="dt-nav" data-n="1">›</button></div>
+<div class="dt-grid">${cells}</div>
+<div class="dt-time"><select aria-label="Hour">${Array.from({length:24},(_,h)=>`<option value="${h}" ${h===hh?"selected":""}>${pad(h)}</option>`).join("")}</select><select aria-label="Minute">${[0,5,10,15,20,25,30,35,40,45,50,55].map(m=>`<option value="${m}" ${m===mm?"selected":""}>${pad(m)}</option>`).join("")}</select></div>
+<div class="dt-foot"><button type="button" class="btn soft" data-a="today">Today</button><button type="button" class="btn soft" data-a="clear">Clear</button><button type="button" class="btn primary" data-a="done">Done</button></div>`;
+pop.querySelectorAll("[data-n]").forEach(b=>b.onclick=()=>{vm+=+b.dataset.n;if(vm<0){vm=11;vy--;}if(vm>11){vm=0;vy++;}paint();});
+pop.querySelectorAll(".dt-day:not(:disabled)").forEach(b=>b.onclick=()=>{const[y,m,d]=b.dataset.d.split("-").map(Number);
+input.value=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}T${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")}`;
+paint();sync();});
+const[hs,ms]=pop.querySelectorAll("select");
+hs.onchange=()=>{hh=+hs.value;keep();};ms.onchange=()=>{mm=+ms.value;keep();};
+function keep(){const v=val();if(v){v.setHours(hh,mm);input.value=`${v.getFullYear()}-${String(v.getMonth()+1).padStart(2,"0")}-${String(v.getDate()).padStart(2,"0")}T${String(hh).padStart(2,"0")}:${String(mm).padStart(2,"0")}`;sync();}}
+pop.querySelector('[data-a="today"]').onclick=()=>{const t=new Date();vy=t.getFullYear();vm=t.getMonth();hh=t.getHours();mm=t.getMinutes()-t.getMinutes()%5;paint();};
+pop.querySelector('[data-a="clear"]').onclick=()=>{input.value="";sync();};
+pop.querySelector('[data-a="done"]').onclick=()=>{wrap.classList.remove("open");};}
+function sync(){const v=val(),l=btn.querySelector(".lbl");
+if(v){l.textContent=v.toLocaleString([],{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"});l.classList.remove("dim");}
+else{l.textContent="Pick date & time…";l.classList.add("dim");}}
+btn.onclick=e=>{e.stopPropagation();
+const was=wrap.classList.contains("open");
+document.querySelectorAll(".dt-wrap.open").forEach(w=>w.classList.remove("open"));
+if(!was){const v=val();if(v){vy=v.getFullYear();vm=v.getMonth();hh=v.getHours();mm=v.getMinutes();}paint();wrap.classList.add("open");}};
+document.addEventListener("click",e=>{if(!wrap.contains(e.target))wrap.classList.remove("open");});
+sync();}
+["sWhen","bWhen"].forEach(id=>{const el=$(id);if(el)makeDT(el);});
 // idle prefetch + visibility-aware poll (cheap, smooth)
 const idle=window.requestIdleCallback||(f=>setTimeout(f,1200));
 idle(()=>{["/api/contacts?limit=20","/api/conversations","/api/blacklist"].forEach(u=>fetch(u,{headers:token()?{Authorization:"Bearer "+token()}: {}}).catch(()=>{}));});

@@ -12,6 +12,7 @@ body.dark{--bg:#0c1526;--card:#132039;--ink:#f2edff;--mut:#9db4d8;--line:#263f63
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 button{font:inherit}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--acc2);outline-offset:2px}
+.rail nav button:focus-visible,.rail nav a:focus-visible,.tabbar button:focus-visible,.tabbar a:focus-visible{outline:none}
 #pbar{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--acc),var(--lime));z-index:80;transition:width .25s ease,opacity .3s}
 /* layout */
 .shell{display:flex;min-height:100dvh}

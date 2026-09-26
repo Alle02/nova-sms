@@ -694,13 +694,9 @@ def favicon():
     from fastapi.responses import Response
     return Response(status_code=204)
 
-@app.get("/{path:path}")
-def spa_fallback(path: str):
-    # Client-side routes (/sending, /contacts, ...) render in the React SPA.
-    # Never shadow the API, docs, or static assets.
-    if path.startswith(("api/", "docs", "openapi.json", "redoc")):
-        raise HTTPException(404, "Not Found")
-    return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-store"})
+# NOTE: the SPA catch-all (spa_fallback) lives at the END of this file.
+# It must stay last: FastAPI matches routes in definition order and a
+# catch-all placed here would shadow every API route defined below it.
 
 # ---------- auth ----------
 @app.post("/api/auth/register", status_code=201)
@@ -1042,3 +1038,12 @@ def admin_overview(authorization: str = Header(default="")):
     out["recent_users"] = [db.row_to_dict(r) for r in recent]
     out["pending_sender_list"] = [db.row_to_dict(r) for r in pending]
     return out
+
+# ---------- SPA catch-all (MUST stay last - see note above) ----------
+@app.get("/{path:path}")
+def spa_fallback(path: str):
+    # Client-side routes (/sending, /contacts, ...) render in the React SPA.
+    # Never shadow the API, docs, or static assets.
+    if path.startswith(("api/", "docs", "openapi.json", "redoc")):
+        raise HTTPException(404, "Not Found")
+    return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-store"})

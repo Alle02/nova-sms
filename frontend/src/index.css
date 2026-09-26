@@ -29,30 +29,30 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 .collapse:hover{background:rgba(255,255,255,.2)}
 .sec{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#8fa8d0;margin:14px 10px 6px}
 .rail nav{display:flex;flex-direction:column;gap:4px}
-.rail nav button{position:relative;display:flex;gap:11px;align-items:center;background:transparent;border:1px solid transparent;color:#c9d8f2;padding:10px 12px;border-radius:14px;cursor:pointer;font-size:14px;text-align:left;transition:.18s;min-height:48px;width:100%}
-.rail nav button i{width:34px;height:34px;flex:none;display:grid;place-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:11px;font-style:normal;transition:.18s}
-.rail nav button i svg{width:18px;height:18px;display:block}
-.rail nav button:hover{background:rgba(255,255,255,.09);transform:translateX(3px)}
-.rail nav button.on{background:linear-gradient(90deg,var(--lime),#dbeafe);color:#1a1408;font-weight:800;box-shadow:0 8px 22px rgba(125,211,252,.3)}
-.rail nav button.on i{background:rgba(0,0,0,.12);border-color:transparent;color:#1a1408}
+.rail nav button,.rail nav a{position:relative;display:flex;gap:11px;align-items:center;background:transparent;border:1px solid transparent;color:#c9d8f2;padding:10px 12px;border-radius:14px;cursor:pointer;font-size:14px;text-align:left;text-decoration:none;transition:.18s;min-height:48px;width:100%}
+.rail nav button i,.rail nav a i{width:34px;height:34px;flex:none;display:grid;place-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:11px;font-style:normal;transition:.18s}
+.rail nav button i svg,.rail nav a i svg{width:18px;height:18px;display:block}
+.rail nav button:hover,.rail nav a:hover{background:rgba(255,255,255,.09);transform:translateX(3px)}
+.rail nav button.on,.rail nav a.on{background:linear-gradient(90deg,var(--lime),#dbeafe);color:#1a1408;font-weight:800;box-shadow:0 8px 22px rgba(125,211,252,.3)}
+.rail nav button.on i,.rail nav a.on i{background:rgba(0,0,0,.12);border-color:transparent;color:#1a1408}
 .rail button em{margin-left:auto;background:#ff5b8d;color:#fff;font-style:normal;font-size:11px;border-radius:12px;padding:1px 8px}
 .rail-card{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#ffffff10;border:1px solid #ffffff1c;border-radius:14px;padding:14px}
 .rail-card b{font-size:24px;color:var(--lime);display:block;line-height:1}
 .rail-card span{font-size:12px;color:#a9c2e8}
 .rail-foot{padding:10px 8px 2px;color:#8ba3c7;font-size:11.5px}
 .rail{transition:width .25s ease,transform .26s ease}
-.rail nav button label{white-space:nowrap;overflow:hidden}
+.rail nav button label,.rail nav a label{white-space:nowrap;overflow:hidden}
 body.rail-min .rail{width:96px}
 body.rail-min .rail label,body.rail-min .sec,body.rail-min .brand,body.rail-min .rail-foot{display:none}
 body.rail-min .logo{justify-content:center;padding:4px 0 16px}
 body.rail-min .collapse{margin:0;transform:rotate(180deg)}
-body.rail-min .rail nav button{justify-content:center;padding:10px 0}
+body.rail-min .rail nav button,body.rail-min .rail nav a{justify-content:center;padding:10px 0}
 body.rail-min .grp-c{margin:2px 0;padding:0;border-left:0}
 body.rail-min .grp-h em{display:none}
-body.rail-min .rail nav button i{margin:0}
+body.rail-min .rail nav button i,body.rail-min .rail nav a i{margin:0}
 /* icon tooltips in collapsed mode */
-body.rail-min .rail nav button{position:relative}
-body.rail-min .rail nav button:hover::after{content:attr(data-tip);position:absolute;left:calc(100% + 12px);top:50%;transform:translateY(-50%);background:#0b1e3a;color:#fff;font-size:12.5px;font-weight:700;padding:8px 13px;border-radius:10px;white-space:nowrap;z-index:70;box-shadow:0 10px 26px rgba(8,30,80,.4);pointer-events:none}
+body.rail-min .rail nav button,body.rail-min .rail nav a{position:relative}
+body.rail-min .rail nav button:hover::after,body.rail-min .rail nav a:hover::after{content:attr(data-tip);position:absolute;left:calc(100% + 12px);top:50%;transform:translateY(-50%);background:#0b1e3a;color:#fff;font-size:12.5px;font-weight:700;padding:8px 13px;border-radius:10px;white-space:nowrap;z-index:70;box-shadow:0 10px 26px rgba(8,30,80,.4);pointer-events:none}
 .nav-veil{display:none}
 /* header */
 .bar{position:sticky;top:0;z-index:30;display:flex;gap:12px;align-items:center;padding:12px clamp(12px,2.5vw,24px);background:color-mix(in srgb,var(--bg) 84%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
@@ -230,10 +230,10 @@ body.thread-open .threads{display:none}
 .scrim{place-items:end center;padding:0}
 .sheet{width:100%;max-width:100%;border-radius:20px 20px 0 0;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
 .tabbar{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:40;background:var(--card);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom));gap:2px}
-.tabbar button{flex:1 1 0;min-width:0;border:0;background:none;padding:8px 2px;border-radius:12px;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:19px;min-height:56px}
-.tabbar button svg{width:21px;height:21px;display:block}
-.tabbar button small{font-size:10px;font-weight:700}
-.tabbar button.on{background:var(--dark);color:#fff}
+.tabbar button,.tabbar a{flex:1 1 0;min-width:0;border:0;background:none;padding:8px 2px;border-radius:12px;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:19px;min-height:56px;text-decoration:none}
+.tabbar button svg,.tabbar a svg{width:21px;height:21px;display:block}
+.tabbar button small,.tabbar a small{font-size:10px;font-weight:700}
+.tabbar button.on,.tabbar a.on{background:var(--dark);color:#fff}
 #toasts{left:12px;right:12px;bottom:calc(84px + env(safe-area-inset-bottom))}
 }
 @media(max-width:420px){.kpis{grid-template-columns:1fr 1fr}.hero-stat b{font-size:26px}.frow .btn{flex:1}}

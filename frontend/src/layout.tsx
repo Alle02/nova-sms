@@ -27,7 +27,7 @@ const icons = {
 
 function Item({ to, icon, label, badge }: { to: string; icon: string; label: string; badge?: ReactNode }) {
   return (
-    <NavLink to={to} className={({ isActive }) => (isActive ? 'on' : '')}>
+    <NavLink to={to} title={label} className={({ isActive }) => (isActive ? 'on' : '')}>
       <i>{I(icons[icon as keyof typeof icons])}</i><label>{label}</label>{badge}
     </NavLink>
   );

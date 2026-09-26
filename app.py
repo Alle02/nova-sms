@@ -673,20 +673,33 @@ def del_key(kid: int):
         raise HTTPException(404, "Not found")
     return {"deleted": kid}
 
-# ---------- frontend ----------
+# ---------- frontend (React SPA built from frontend/ into static/) ----------
 STATIC = BASE / "static"
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
+@app.get("/")
+def index():
+    return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-store"})
+
 @app.get("/login")
 def login_page():
-    return FileResponse(STATIC / "login.html", headers={"Cache-Control": "no-store"})
+    return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-store"})
 
 @app.get("/admin")
 def admin_page():
-    return FileResponse(STATIC / "admin-login.html", headers={"Cache-Control": "no-store"})
+    return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-store"})
 
-@app.get("/")
-def index():
+@app.get("/favicon.ico")
+def favicon():
+    from fastapi.responses import Response
+    return Response(status_code=204)
+
+@app.get("/{path:path}")
+def spa_fallback(path: str):
+    # Client-side routes (/sending, /contacts, ...) render in the React SPA.
+    # Never shadow the API, docs, or static assets.
+    if path.startswith(("api/", "docs", "openapi.json", "redoc")):
+        raise HTTPException(404, "Not Found")
     return FileResponse(STATIC / "index.html", headers={"Cache-Control": "no-store"})
 
 # ---------- auth ----------

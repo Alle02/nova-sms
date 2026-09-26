@@ -18,7 +18,7 @@ Read this before touching the repo. Companion: `README.md` (product docs).
 ```powershell
 python -m uvicorn app:app --port 8000   # run in background for servers
 python -c "import urllib.request; print(urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=8).read().decode())"
-node --check static/app.js              # JS syntax (node exists)
+npm run build --prefix frontend          # typecheck + rebuild SPA into static/
 ```
 
 - Port busy? `netstat -ano | Select-String "8000"` → `Stop-Process -Id <pid>`.
@@ -42,27 +42,21 @@ Key rules enforced server-side (mirror them in UI, never rely on UI alone):
 - Users page + `/api/admin/*`: admin+. Role change + user delete: super only,
   no self role-change/delete. Admin login accepts admin/super_admin roles.
 
-## Frontend conventions (`static/`)
+## Frontend conventions (`frontend/src/`)
 
-- One SPA: pages are `<section class="view" id="p-*">`, shown via `go(p, tab)`.
-  Every nav target must have a matching view (profile/billing/pricing are
-  header-menu-only — that is intentional).
-- `api(m, url, body?, quiet?)` auto-attaches the token; 401 clears the token
-  and redirects to `/login` exactly once (`_gone` guard). Background polls pass
-  `quiet=true` and skip repaint when the payload signature is unchanged.
-- All buttons need `type="button"`. Guard optional DOM ids (`if($(...))`)
-  because views (e.g. removed pages) come and go.
-- Custom dropdowns (`enhanceSelect`) and calendar pickers (`makeDT`) wrap
-  native controls; natives stay source of truth.
-- **After editing `style.css`/`app.js`, bump `?v=` in `index.html`** and serve
-  HTML is `no-store` — keep it that way.
-- `BUILD` const at top of `app.js` mirrors the footer `#buildTag`; bump both
-  on user-visible changes if helpful.
-- Charts: `donut()`, `bars()`, `drawVolume()` use `fitCanvas()` (HiDPI).
-- Chunked `paint()` for tables; `skel()`/`skelList()` placeholders; `toast()`.
-- After changes: `node --check`, click-test key flows headlessly when touching
-  navigation, then `git add -A && git commit && git push` (remote `origin`,
-  branch `main`, GitHub CLI `gh` is authed).
+- React + TypeScript (Vite, react-router). Routes in `App.tsx` with `Guard`
+  (auth) and `Guard admin` (Users page). Never rely on UI gating alone.
+- `api.ts` is the single typed client; `api()` auto-attaches the token and
+  redirects to `/login` exactly once on 401.
+- Styling: `index.css` holds the blue/white theme + breakpoints
+  (1200/1050/760/560/420). Shared bits in `components.tsx` (Modal, Status,
+  Select, Chunked lists, Toasts), charts in `charts.tsx`, calendar in
+  `calendar.tsx`, shell in `layout.tsx`.
+- Workflow: edit source → `npm run build` (runs `tsc -b`, fails on type
+  errors) → Vite regenerates `../static` (hashed assets = automatic cache
+  busting) → verify served app → commit `frontend/` + `static/`.
+- Backend serves the SPA (`/`, `/login`, `/admin`, `/{path}` fallback);
+  keep those routes in `app.py` in sync with the router.
 
 ## Backend conventions
 

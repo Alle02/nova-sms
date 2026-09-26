@@ -34,11 +34,11 @@ Demo accounts (seeded):
 | `database.py`           | SQLite schema, migrations, seed data, settings        |
 | `auth.py`               | PBKDF2 password hashing, session tokens               |
 | `sms_gateway.py`        | Mock provider (validation, async delivery simulation) |
-| `static/index.html`     | Dashboard SPA (all pages as `.view` sections)         |
-| `static/app.js`         | All frontend logic (Bootstrap `BUILD` const at top)   |
-| `static/style.css`      | Full theme (CSS vars in `:root`, 1200/1050/760/560/420 breakpoints) |
-| `static/login.html`     | Customer login + registration                         |
-| `static/admin-login.html` | Staff login (admin + super admin)                   |
+| `static/`               | Built React SPA (`index.html` + `assets/`, committed) |
+| `frontend/`             | React + TypeScript source (Vite, react-router)        |
+| `frontend/src/api.ts`   | Typed API client mirroring every backend route        |
+| `frontend/src/pages/`   | One component per page (Dashboard, Sending, …)        |
+| `frontend/src/layout.tsx` | Glass sidebar, topbar, mobile tab-bar, account menu |
 | `requirements.txt`      | Runtime deps · `requirements-dev.txt` = test deps     |
 | `AGENTS.md`             | Operating guide for AI coding agents                  |
 
@@ -82,17 +82,32 @@ Support/dev: `GET/POST /api/tickets`, `GET/POST /api/keys`, `DELETE /api/keys/{i
 - Scheduled dispatcher runs every 30s and fires due `pending` rows.
 - Blacklisted numbers are rejected before send.
 
-## Frontend pages (`static/index.html` sections)
+## Frontend pages (React Router paths)
 
-Dashboard (role-split customer / admin), Sending (Single / Bulk / Scheduled tabs),
-Sender ID, SMS Template, Contacts (groups → people → Excel import), History
-(under Reports), Blacklist, Reports, Developers, Support, Users (admin+),
-Profile, Billing, Pricing. Mobile bottom tab-bar + drawer; see `AGENTS.md`.
+`/`, `/sending?tab=single|campaign|sched`, `/senders`, `/templates`,
+`/contacts`, `/history`, `/blacklist`, `/reports`, `/developers`, `/support`,
+`/users` (admin+), `/profile`, `/billing`, `/pricing`, `/login`, `/admin`.
+Dashboard role-splits customer / admin. Mobile bottom tab-bar + drawer.
+
+## Frontend development (React + TypeScript)
+
+```powershell
+cd frontend
+npm install
+npm run dev      # Iterate with hot reload (proxies nothing; point it at :8000 API or run the built copy)
+npm run build    # Typechecks (tsc) and regenerates ../static — commit the result
+```
+
+FastAPI serves the built SPA from `static/` (including the `/login`, `/admin`
+and SPA-fallback routes in `app.py`), so a normal `uvicorn` run serves the
+whole system with no node process. Theme lives in `frontend/src/index.css`
+(same blue/white system, same breakpoints).
 
 ## Troubleshooting
 
-- **Stale UI after a change:** HTML shell is `no-store`, but bump `?v=` on
-  `style.css`/`app.js` in `index.html` when editing them.
+- **Stale UI after a change:** HTML shell is `no-store`, and Vite hashes
+  asset filenames on every `npm run build`, so rebuilds bust caches
+  automatically. Always rebuild + commit `static/` after frontend edits.
 - **Port busy:** `netstat -ano | Select-String "8000"` then
   `Stop-Process -Id <pid>`.
 - **Kicked to login:** session expired/invalid — sign in again (7-day tokens).

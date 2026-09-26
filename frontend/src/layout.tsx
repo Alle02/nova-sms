@@ -25,7 +25,18 @@ const icons = {
   chev: '<path d="m6 9 6 6 6-6"/>',
 };
 
-function Item({ to, icon, label, badge }: { to: string; icon: string; label: string; badge?: ReactNode }) {
+function Item({ to, icon, label, badge, match }: {
+  to: string; icon: string; label: string; badge?: ReactNode; match?: (loc: { pathname: string; search: string }) => boolean;
+}) {
+  const loc = useLocation();
+  if (match) {
+    const on = match(loc);
+    return (
+      <NavLink to={to} title={label} className={on ? 'on' : ''}>
+        <i>{I(icons[icon as keyof typeof icons])}</i><label>{label}</label>{badge}
+      </NavLink>
+    );
+  }
   return (
     <NavLink to={to} title={label} className={({ isActive }) => (isActive ? 'on' : '')}>
       <i>{I(icons[icon as keyof typeof icons])}</i><label>{label}</label>{badge}
@@ -80,8 +91,10 @@ export function Layout() {
         <div className="sec">Messaging</div>
         <nav>
           <Group id="grpSending" icon="send" label="Sending" to="/sending?tab=single" active={loc.pathname === '/sending'}>
-            <Item to="/sending?tab=single" icon="msg" label="Single Message" />
-            <Item to="/sending?tab=campaign" icon="mega" label="Bulk Message" />
+            <Item to="/sending?tab=single" icon="msg" label="Single Message"
+              match={l => l.pathname === '/sending' && new URLSearchParams(l.search).get('tab') !== 'campaign' && new URLSearchParams(l.search).get('tab') !== 'sched'} />
+            <Item to="/sending?tab=campaign" icon="mega" label="Bulk Message"
+              match={l => l.pathname === '/sending' && new URLSearchParams(l.search).get('tab') === 'campaign'} />
             <Item to="/senders" icon="id" label="Sender ID" />
             <Item to="/templates" icon="file" label="SMS Template" />
           </Group>
